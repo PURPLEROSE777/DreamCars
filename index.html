@@ -99,6 +99,8 @@
       <!-- Entrada al inventario (mantener ID original) -->
       <a href="#" id="linkInventario" aria-haspopup="dialog" aria-controls="inventarioOverlay">Inventario</a>
       <a href="#" id="linkContacto" aria-haspopup="dialog" aria-controls="contactoOverlay">Contacto</a>
+      <a href="#" id="linkLogin" aria-haspopup="dialog" aria-controls="loginOverlay">Login</a>
+      <a href="#" id="linkRegistro" aria-haspopup="dialog" aria-controls="registroOverlay">Registro</a>
     </nav>
 
     <!-- ======================================================
@@ -507,6 +509,59 @@
     </div>
   </div>
 
+  <!-- ======================================================
+       OVERLAYS DE LOGIN Y REGISTRO
+       - Estilo coherente con Galería e Inventario
+       - Versión local (usa localStorage)
+       ====================================================== -->
+
+  <!-- OVERLAY LOGIN -->
+  <div class="overlay" id="loginOverlay" aria-hidden="true" role="dialog">
+    <div class="overlay-content">
+      <div class="overlay-head">
+        <h2>Iniciar Sesión</h2>
+        <button class="btn-cerrar" id="cerrarLogin" aria-label="Cerrar login">✕</button>
+      </div>
+      <form id="formLogin" class="formulario" autocomplete="off">
+        <div class="form-row">
+          <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+          <input type="password" id="loginPassword" placeholder="Contraseña" required>
+        </div>
+        <div class="form-row">
+          <button type="submit" class="btn-primario">Entrar</button>
+        </div>
+        <p class="nota">¿No tienes cuenta? 
+          <a href="#" id="abrirRegistro">Regístrate aquí</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- OVERLAY REGISTRO -->
+  <div class="overlay" id="registroOverlay" aria-hidden="true" role="dialog">
+    <div class="overlay-content">
+      <div class="overlay-head">
+        <h2>Registro de Usuario</h2>
+        <button class="btn-cerrar" id="cerrarRegistro" aria-label="Cerrar registro">✕</button>
+      </div>
+      <form id="formRegistro" class="formulario" autocomplete="off">
+        <div class="form-row">
+          <input type="text" id="regNombre" placeholder="Nombre completo" required>
+          <input type="email" id="regEmail" placeholder="Correo electrónico" required>
+          <input type="password" id="regPassword" placeholder="Contraseña" required>
+          <input type="password" id="regConfirmar" placeholder="Confirmar contraseña" required>
+        </div>
+        <div class="form-row">
+          <button type="submit" class="btn-primario">Registrarme</button>
+        </div>
+        <p class="nota">¿Ya tienes cuenta? 
+          <a href="#" id="abrirLogin">Inicia sesión aquí</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  
   <!-- FOOTER (sin cambios) -->
   <footer class="footer">
     <p>&copy; 2025 DreamCars — Leyendas Sobre Ruedas</p>
@@ -730,3 +785,4 @@
   </script>
 </body>
 </html>
+
