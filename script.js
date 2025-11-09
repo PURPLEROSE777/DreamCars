@@ -769,4 +769,114 @@ invImportarCSV.addEventListener("change", (e) => {
   reader.readAsText(file);
   e.target.value = "";
 });
+/* ============================
+   🔐 LOGIN Y REGISTRO LOCAL
+   ============================ */
+
+const loginOverlay = document.getElementById('loginOverlay');
+const registroOverlay = document.getElementById('registroOverlay');
+const linkLogin = document.getElementById('linkLogin');
+const linkRegistro = document.getElementById('linkRegistro');
+const cerrarLogin = document.getElementById('cerrarLogin');
+const cerrarRegistro = document.getElementById('cerrarRegistro');
+const abrirRegistro = document.getElementById('abrirRegistro');
+const abrirLogin = document.getElementById('abrirLogin');
+const formLogin = document.getElementById('formLogin');
+const formRegistro = document.getElementById('formRegistro');
+
+// Funciones para mostrar y ocultar overlays
+function abrirOverlay(el) {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+  el.classList.add('open');
+  el.setAttribute('aria-hidden', 'false');
+}
+
+function cerrarOverlay(el) {
+  el.classList.remove('open');
+  el.setAttribute('aria-hidden', 'true');
+}
+
+// Enlaces del header
+linkLogin.addEventListener('click', e => { e.preventDefault(); abrirOverlay(loginOverlay); });
+linkRegistro.addEventListener('click', e => { e.preventDefault(); abrirOverlay(registroOverlay); });
+
+// Botones de cierre
+cerrarLogin.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(loginOverlay); });
+cerrarRegistro.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(registroOverlay); });
+
+// Intercambio entre formularios
+abrirRegistro.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(loginOverlay); abrirOverlay(registroOverlay); });
+abrirLogin.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(registroOverlay); abrirOverlay(loginOverlay); });
+
+// Registro de usuario (modo localStorage)
+formRegistro.addEventListener('submit', e => {
+  e.preventDefault();
+  const nombre = document.getElementById('regNombre').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('regPassword').value;
+  const conf = document.getElementById('regConfirmar').value;
+
+  if (pass !== conf) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
+  if (users.find(u => u.email === email)) {
+    alert('Ya existe un usuario registrado con este correo.');
+    return;
+  }
+
+  users.push({ nombre, email, pass });
+  localStorage.setItem('dreamcars_users', JSON.stringify(users));
+  alert('Registro exitoso. Ahora puedes iniciar sesión.');
+  cerrarOverlay(registroOverlay);
+  abrirOverlay(loginOverlay);
+});
+
+// Inicio de sesión (modo localStorage)
+formLogin.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPassword').value;
+  const users = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
+  const user = users.find(u => u.email === email && u.pass === pass);
+
+  if (!user) {
+    alert('Credenciales incorrectas.');
+    return;
+  }
+
+  localStorage.setItem('dreamcars_user', JSON.stringify(user));
+  alert(`Bienvenido, ${user.nombre}`);
+  cerrarOverlay(loginOverlay);
+  // Actualiza el header
+  actualizarEstadoLogin();
+});
+
+// Muestra nombre del usuario logueado
+function actualizarEstadoLogin() {
+  const user = JSON.parse(localStorage.getItem('dreamcars_user'));
+  if (user) {
+    linkLogin.textContent = `👤 ${user.nombre.split(' ')[0]}`;
+    linkLogin.removeAttribute('aria-controls');
+    linkLogin.onclick = e => {
+      e.preventDefault();
+      if (confirm('¿Cerrar sesión?')) {
+        localStorage.removeItem('dreamcars_user');
+        linkLogin.textContent = 'Login';
+        linkLogin.onclick = null;
+        location.reload();
+      }
+    };
+    linkRegistro.style.display = 'none';
+  } else {
+    linkLogin.textContent = 'Login';
+    linkRegistro.style.display = 'inline';
+  }
+}
+
+// Ejecutar al cargar
+actualizarEstadoLogin();
+
 
