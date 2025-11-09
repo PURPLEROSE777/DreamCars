@@ -1,0 +1,639 @@
+:root{
+  --bg: #0e0e0f;
+  --bg-2:#151517;
+  --card:#1c1c20;
+  --text:#f3f3f3;
+  --muted:#b7b7bd;
+  --accent:#e50914;
+  --accent-2:#ff4d57;
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #1a1a1f 0, transparent 60%),
+    radial-gradient(1200px 600px at 90% -10%, #17171c 0, transparent 60%),
+    var(--bg);
+}
+
+/* === HEADER y NAV === */
+.header{
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px;
+  background:rgba(10,10,12,.85);
+  backdrop-filter: blur(6px);
+  border-bottom:1px solid #22232a;
+}
+.brand{
+  font-size:22px; font-weight:800; letter-spacing:.5px;
+  color:var(--accent);
+}
+.nav a{
+  margin-left:18px; text-decoration:none; color:var(--text); font-weight:600;
+  padding:8px 10px; border-radius:10px; position:relative;
+}
+.nav a::after{
+  content:""; position:absolute; left:10px; right:10px; bottom:6px; height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  opacity:0; transform:scaleX(.2); transition:.25s;
+}
+.nav a:hover{ color:#fff; }
+.nav a:hover::after{ opacity:1; transform:scaleX(1); }
+
+/* === SECCIÓN INICIO === */
+.inicio{ max-width:1200px; margin:40px auto; padding:0 20px 40px; }
+.intro{
+  background: linear-gradient(180deg, #141418, #121216);
+  border:1px solid #21222a; border-radius:20px; box-shadow:var(--shadow);
+  padding:40px 36px; margin-top:10px;
+}
+.titulo{ margin:0 0 6px; font-size:40px; letter-spacing:.3px; }
+.subtitulo{ margin:0; color:var(--muted); }
+
+/* === CARDS DE MARCAS === */
+.marcas{ margin-top:36px; display:grid; grid-template-columns:1fr; gap:24px; }
+.card{
+  display:grid; grid-template-columns: 1.1fr .9fr; gap:20px;
+  background:var(--card); border:1px solid #242531;
+  border-radius:20px; box-shadow:var(--shadow);
+  padding:22px; transform:translateY(12px); opacity:0; transition:.6s ease;
+}
+.card.revealed{ transform:none; opacity:1; }
+.card:hover{ outline:1px solid #2c2d3a; }
+.card h2{ margin:0 0 8px; color:var(--accent); font-size:26px; }
+.card p{ margin:0 0 10px; color:#ddd; line-height:1.55; }
+.card-img{
+  overflow:hidden; border-radius:16px; align-self:stretch;
+  background:#101014; display:flex; align-items:center; justify-content:center;
+}
+.card-img img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transform:scale(1.02); transition: transform .4s ease;
+}
+.card:hover .card-img img{ transform:scale(1.08); }
+
+/* === FORMULARIO GENERAL (contacto o sugerencias) === */
+.formulario{
+  max-width:700px; margin:34px auto 6px; padding:22px 22px 26px;
+  background:var(--bg-2); border:1px solid #242531; border-radius:18px; box-shadow:var(--shadow);
+  text-align:center;
+}
+.formulario h3{ margin:0 0 12px; color:var(--accent); }
+.form-row{ display:flex; gap:10px; justify-content:center; }
+.form-row input{
+  flex:1; max-width:420px; padding:12px 14px; border-radius:12px;
+  border:1px solid #2a2b36; background:#111216; color:#fff; outline:none;
+}
+.form-row button{
+  padding:12px 16px; border:0; border-radius:12px; cursor:pointer;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; font-weight:700;
+  box-shadow:0 6px 18px rgba(229,9,20,.35);
+}
+#mensaje{ margin-top:8px; color:#a7e5b8; min-height:20px; }
+
+/* === OVERLAYS (galería, autores, contacto) === */
+.overlay{
+  position:fixed; inset:0; background:rgba(8,8,10,.72);
+  backdrop-filter: blur(6px);
+  display:none; align-items:center; justify-content:center; z-index:50;
+}
+.overlay.activo{ display:flex; }
+.overlay-content{
+  width:min(1100px,92vw);
+  max-height:min(86vh,900px);
+  overflow:hidden; display:flex; flex-direction:column;
+  background:#121216; border:1px solid #2a2b36; border-radius:18px; box-shadow:var(--shadow);
+}
+.overlay-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; border-bottom:1px solid #252634; background:#101015;
+}
+.btn-cerrar{
+  border:0; background:#1e1f2a; color:#fff; width:36px; height:36px; border-radius:10px;
+  cursor:pointer; font-size:18px;
+}
+.grid-galeria{
+  padding:18px; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; overflow:auto;
+}
+.grid-galeria img{
+  width:100%; height:220px; object-fit:cover; border-radius:12px;
+  transition: transform .25s;
+}
+.grid-galeria img:hover{ transform:scale(1.03); }
+.overlay-actions{ padding:14px 18px; border-top:1px solid #252634; display:flex; justify-content:flex-end; background:#101015; }
+.btn-primario{
+  padding:10px 14px; border:0; border-radius:10px; cursor:pointer; font-weight:700; color:#fff;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+}
+
+/* === AUTORES === */
+.autores .lista-autores{
+  padding:18px; list-style:none; display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
+}
+.autores .lista-autores li{
+  background:#171821; border:1px solid #282936; padding:10px 12px; border-radius:12px;
+}
+
+/* === FOOTER === */
+.footer{
+  border-top:1px solid #23242f; color:#bdbdc6;
+  text-align:center; padding:26px 14px; margin-top:30px;
+}
+
+/* === ACCESIBILIDAD === */
+a,button,input{ outline-offset: 3px; }
+a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
+
+/* === CONTACTO === */
+#contactoOverlay .overlay-body { padding: 20px; }
+#contactoOverlay textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #2a2b36;
+  background: #111216;
+  color: #fff;
+  padding: 10px;
+}
+
+/* ===================================================
+   🔎 RESULTADOS DE BÚSQUEDA DE MARCAS
+   =================================================== */
+#resultados {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 18px;
+  background: var(--bg-2);
+  border: 1px solid #242531;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.4s ease;
+}
+
+.preview-card {
+  background: var(--card);
+  border: 1px solid #2a2b36;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.preview-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid #2a2b36;
+  transition: transform 0.3s ease;
+}
+
+.preview-card p {
+  margin: 10px 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+/* Efectos hover con glow */
+.preview-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 0 18px rgba(229, 9, 20, 0.6), 0 10px 30px rgba(229, 9, 20, 0.35);
+  border-color: var(--accent-2);
+}
+.preview-card:hover img { transform: scale(1.08); }
+
+/* Animación suave al aparecer */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* === Ajuste de previews en resultados === */
+.preview-card img {
+  width: 100%;
+  height: 140px;          /* 🔹 altura fija más cómoda */
+  object-fit: contain;    /* 🔹 evita deformaciones, muestra la imagen completa */
+  background: #0f0f12;    /* 🔹 fondo neutro para cuando la imagen no llena todo */
+  display: block;
+  border-bottom: 1px solid #2a2b36;
+  transition: transform 0.3s ease;
+  padding: 6px;           /* 🔹 pequeño espacio para que no corte el auto */
+  border-radius: 8px;
+}
+
+/* Hover suave con proporción correcta */
+.preview-card:hover img {
+  transform: scale(1.05);
+}
+
+/* === Tabla comparativa de autos (overlay tabla) === */
+.tabla-autos {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid #2a2b36;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.tabla-autos th, .tabla-autos td {
+  padding: 12px 14px;
+  text-align: center;
+  border-bottom: 1px solid #2a2b36;
+}
+
+.tabla-autos th {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.tabla-autos td img {
+  width: 120px;
+  height: 80px;
+  object-fit: contain;    /* 🔹 nunca se deforma la proporción */
+  background: #0f0f12;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+/* Hover en filas */
+.tabla-autos tr:hover {
+  background: rgba(229, 9, 20, 0.08);
+  transition: background 0.3s ease;
+}
+
+/* ===================================================
+   📦 SISTEMA DE INVENTARIO
+   =================================================== */
+
+/* Overlay inventario */
+#inventarioOverlay .overlay-body {
+  padding: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 75vh;       /* 🔹 scroll vertical */
+  overflow-y: auto;
+}
+
+/* Formulario de inventario */
+#formInventario {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  background: var(--bg-2);
+  border: 1px solid #2a2b36;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+#formInventario input, 
+#formInventario select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #2a2b36;
+  background: #111216;
+  color: #fff;
+}
+
+#formInventario button {
+  grid-column: 1 / -1;
+  padding: 12px;
+  border-radius: 12px;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(229, 9, 20, 0.35);
+}
+
+#btnCancelarEdicion {
+  background: #2a2b36;
+  color: #eee;
+  display: none;
+}
+
+/* Tabla inventario */
+#tablaInventario {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid #2a2b36;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+#tablaInventario th, 
+#tablaInventario td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #2a2b36;
+  font-size: 14px;
+}
+
+#tablaInventario th {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#tablaInventario td img {
+  width: 90px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Acciones */
+.btn-accion {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 0 2px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-editar {
+  background: #2d77ff;
+  color: #fff;
+}
+.btn-eliminar {
+  background: #e50914;
+  color: #fff;
+}
+
+/* Barra de búsqueda / filtros */
+.inventario-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.inventario-filtros input,
+.inventario-filtros select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #2a2b36;
+  background: #111216;
+  color: #fff;
+}
+
+.inventario-filtros button {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(229, 9, 20, 0.35);
+}
+
+/* Diálogo confirmar */
+#dlgConfirmar {
+  background: var(--bg-2);
+  border: 1px solid #2a2b36;
+  border-radius: 14px;
+  padding: 20px;
+  color: var(--text);
+}
+#dlgConfirmar::backdrop {
+  background: rgba(0,0,0,.6);
+}
+#dlgConfirmar button {
+  margin: 0 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 0;
+  cursor: pointer;
+}
+#dlgConfirmar .btn-ok {
+  background: var(--accent);
+  color: #fff;
+}
+#dlgConfirmar .btn-cancel {
+  background: #2a2b36;
+  color: #fff;
+}
+/* ===== Filtros avanzados inventario ===== */
+.inventario-filtros{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-start;
+  margin-top:10px;
+}
+
+.inventario-filtros input[type="number"]{
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid #2a2b36;
+  background:#111216;
+  color:#fff;
+  min-width:120px;
+}
+
+.inventario-filtros label{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.inventario-filtros .btn-primario{
+  padding:8px 12px;
+  height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Ajustes responsivos 1*/
+@media (max-width:720px){
+  .inventario-filtros{ justify-content:center; }
+  .inventario-filtros input[type="number"]{ min-width:120px; flex:1 1 45%; }
+}
+
+.stat-card{
+  background: var(--bg-2, #1b1c24);
+  padding: 12px;
+  border-radius: 12px;
+  min-width: 140px;
+  margin: 6px;
+  box-shadow: var(--shadow, 0 2px 6px rgba(0,0,0,0.5));
+}
+.stat-card h4{
+  margin:6px 0 0;
+  font-size:1.2em;
+  font-weight:800;
+  color: var(--accent, #ffce69);
+}
+.stat-card p{
+  margin:0;
+  font-size:0.85em;
+  color: var(--muted, #aaa);
+}
+/* ===================================================
+   🎨 PANEL DE GESTIÓN INVENTARIO — REESTILIZADO
+   =================================================== */
+
+/* Contenedor principal */
+#toolbarInventario {
+  background: var(--bg-2);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #2a2b36;
+}
+
+/* Título */
+#toolbarInventario h3 {
+  color: var(--accent);
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Contenedor de filtros */
+.toolbar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Input búsqueda y select categoría */
+.input-busqueda,
+.select-categoria,
+.filtros-rapidos input {
+  background: #111216;
+  border: 1px solid #2a2b36;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease-in-out;
+}
+
+.input-busqueda:focus,
+.select-categoria:focus,
+.filtros-rapidos input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
+}
+
+/* Filtros rápidos */
+.filtros-rapidos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.chk-disponibilidad {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Botonera principal */
+.acciones-inventario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Botones base */
+.btn-primario,
+.btn-peligro {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Botones primarios */
+.btn-primario {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+}
+.btn-primario:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.6), 0 6px 18px rgba(229, 9, 20, 0.3);
+}
+
+/* Botones de peligro */
+.btn-peligro {
+  background: #e50914;
+  color: #fff;
+}
+.btn-peligro:hover {
+  background: #ff3339;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 77, 87, 0.6);
+}
+
+/* Botones de importar con estilo diferenciado */
+.btn-importar {
+  background: #ffce69 !important;
+  color: #1c1c1c !important;
+  font-weight: 700;
+}
+.btn-importar:hover {
+  background: #ffc94d !important;
+  box-shadow: 0 0 12px rgba(255, 206, 105, 0.6);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .filtros-rapidos {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .acciones-inventario {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .acciones-inventario button,
+  .acciones-inventario label {
+    width: 100%;
+    justify-content: center;
+  }
+}

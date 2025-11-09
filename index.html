@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Metadatos básicos (tal como estaban en tu HTML original) -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Historia e íconos de marcas de autos legendarias.">
+  <meta name="keywords" content="autos, deportivos, Ferrari, Lamborghini, Mustang">
+  <meta name="author" content="Ximapan Cinivananini">
+  <title>DreamCars: Leyendas Sobre Ruedas</title>
+
+  <!-- Hoja de estilos principal (no se modifica, se reutiliza tal cual) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ======================================================
+       Estilos inline mínimos para controles nuevos (config, audio)
+       - Se añaden aquí para no tocar tu style.css original.
+       - Estilos pequeños y localizados para que encajen con tu header.
+       ====================================================== -->
+  <style>
+    /* Botón de configuración - aparece en el extremo del header */
+    .btn-config {
+      margin-left: 18px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      width:36px;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:8px;
+    }
+    .btn-config:focus { outline:2px solid var(--accent-2); }
+
+    /* Panel flotante de configuración (hidden por defecto) */
+    .config-panel {
+      position:fixed;
+      right:18px;
+      top:64px;
+      width:320px;
+      max-width:calc(100% - 36px);
+      background:var(--bg-2);
+      border:1px solid #2a2b36;
+      border-radius:12px;
+      box-shadow: var(--shadow);
+      padding:12px;
+      z-index:120;
+      display:none; /* se muestra vía JS */
+    }
+    .config-panel.open { display:block; }
+
+    /* Cabecera dentro del panel */
+    .config-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
+    .config-title { font-weight:800; color:var(--accent); }
+
+    /* Controles de audio: fila limpia */
+    .audio-controls { display:flex; gap:8px; align-items:center; }
+    .audio-controls button { padding:8px 10px; border-radius:8px; border:0; cursor:pointer; font-weight:700; }
+    .audio-controls input[type="range"] { flex:1; }
+
+    /* Pequeñas ayudas visuales */
+    .muted { opacity:0.6; }
+    .config-note { font-size:12px; color:var(--muted); margin-top:8px; }
+
+    /* Ajuste responsivo del panel para móviles */
+    @media (max-width:420px) {
+      .config-panel { right:12px; left:12px; top:72px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================
+       AUDIO GLOBAL:
+       - Se añade un elemento <audio> para reproducir música de fondo.
+       - src apunta a 'audio/ambient.mp3' (coloca tu archivo ahí).
+       - loop para repetir, preload para cargar si es posible.
+       ====================================================== -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="audio/ambient.mp3" type="audio/mpeg">
+    <!-- Texto alternativo si el navegador no soporta audio -->
+    Tu navegador no soporta la reproducción de audio.
+  </audio>
+
+  <!-- HEADER con navegación (se conserva exactamente tu estructura) -->
+  <header class="header">
+    <!-- Marca principal (sin cambios) -->
+    <div class="brand">DreamCars</div>
+
+    <!-- NAV (sin cambios) -->
+    <nav class="nav" aria-label="Navegación principal">
+      <a href="#inicio" id="linkInicio">Inicio</a>
+      <a href="#" id="linkGaleria" aria-haspopup="dialog" aria-controls="galeriaOverlay">Galería</a>
+      <a href="#" id="linkAutores" aria-haspopup="dialog" aria-controls="autoresOverlay">Desarrollado por</a>
+      <a href="#" id="linkTabla" aria-haspopup="dialog" aria-controls="tablaOverlay">Tabla Comparativa</a>
+      <!-- Entrada al inventario (mantener ID original) -->
+      <a href="#" id="linkInventario" aria-haspopup="dialog" aria-controls="inventarioOverlay">Inventario</a>
+      <a href="#" id="linkContacto" aria-haspopup="dialog" aria-controls="contactoOverlay">Contacto</a>
+    </nav>
+
+    <!-- ======================================================
+         BOTÓN CONFIGURACIÓN (extremo del header)
+         - Sirve para abrir un panel con controles: volumen, mute, play/pause.
+         - Añadimos aria-controls para accesibilidad.
+         ====================================================== -->
+    <button id="btnConfig" class="btn-config" aria-expanded="false" aria-controls="configPanel" title="Abrir configuración">⚙</button>
+  </header>
+
+  <!-- Panel de configuración (inicialmente oculto):
+       - Contiene controles para la música: play/pause, mute, volumen.
+       - También permitimos guardar la preferencia en localStorage.
+       - El panel no reemplaza nada del HTML original y se añade como extra.
+  -->
+  <div id="configPanel" class="config-panel" role="region" aria-label="Panel de configuración">
+    <div class="config-head">
+      <div class="config-title">Configuración de sonido</div>
+      <button id="btnCloseConfig" title="Cerrar configuración" aria-label="Cerrar panel">✕</button>
+    </div>
+
+    <!-- Controles de audio: botón play/pause, mute, slider de volumen -->
+    <div class="audio-controls" aria-live="polite">
+      <!-- Play / Pause -->
+      <button id="btnPlayPause" title="Reproducir / Pausar" aria-pressed="false">▶ / ⏸</button>
+
+      <!-- Mute Toggle -->
+      <button id="btnMute" title="Silenciar / Restaurar sonido" aria-pressed="false">🔊</button>
+
+      <!-- Slider de volumen (0.0 - 1.0) -->
+      <input id="volumeRange" type="range" min="0" max="1" step="0.01" aria-label="Control de volumen">
+    </div>
+
+    <!-- Nota explicativa -->
+    <div class="config-note">Usa el control para ajustar la música de fondo. Preferencias guardadas automáticamente.</div>
+  </div>
+
+  <!-- MAIN (contenido principal) - se conserva exactamente el HTML que enviaste -->
+  <main id="inicio" class="inicio">
+
+    <!-- Intro con título y subtítulo (sin cambios) -->
+    <div class="intro">
+      <h1 class="titulo">Leyendas Sobre Ruedas</h1>
+      <p class="subtitulo">
+        Historia, ingeniería y los modelos más icónicos de las marcas que 
+        han marcado el rumbo del automovilismo.
+      </p>
+    </div>
+
+    <!-- 🔎 Barra de búsqueda principal (sin cambios estructurales) -->
+    <section class="formulario reveal" id="sugerencias">
+      <h3>¿Buscas alguna marca?</h3>
+      <div class="form-row">
+        <input type="text" id="marca" placeholder="Escribe la marca" />
+        <button id="btnSugerir">Buscar</button>
+      </div>
+      <p id="mensaje"></p>
+      <div id="resultados" class="resultados"></div>
+    </section>
+
+    <!-- Sección de marcas con artículos (sin cambios) -->
+    <section class="marcas">
+      <!-- Ford -->
+      <article class="card reveal" id="ford">
+        <div class="card-text">
+          <h2>Ford</h2>
+          <p>
+            Fundada en 1903 por Henry Ford en Dearborn, revolucionó la
+            producción con la línea de montaje del <em>Model T</em>, 
+            democratizando el automóvil.
+          </p>
+          <p><strong>Ícono:</strong> Ford Mustang (1964), símbolo eterno del muscle car.</p>
+        </div>
+        <div class="card-img">
+          <img src="images/ford.jpg" alt="Ford Mustang">
+        </div>
+      </article>
+
+      <!-- Lamborghini -->
+      <article class="card reveal" id="lamborghini">
+        <div class="card-text">
+          <h2>Lamborghini</h2>
+          <p>
+            Nacida en 1963 por Ferruccio Lamborghini para retar a Ferrari,
+            la marca abrazó motores V12 y diseños radicales.
+          </p>
+          <p><strong>Ícono:</strong> Lamborghini Miura (1966), primer gran superdeportivo moderno.</p>
+        </div>
+        <div class="card-img">
+          <img src="images/lamborghini.jpg" alt="Lamborghini Miura">
+        </div>
+      </article>
+
+      <!-- Ferrari -->
+      <article class="card reveal" id="ferrari">
+        <div class="card-text">
+          <h2>Ferrari</h2>
+          <p>
+            Fundada por Enzo Ferrari en 1947, su ADN es la competición.
+          </p>
+          <p><strong>Ícono:</strong> Ferrari F40 (1987), el último supervisado por Enzo.</p>
+        </div>
+        <div class="card-img">
+          <img src="images/ferrari.jpg" alt="Ferrari F40">
+        </div>
+      </article>
+
+      <!-- BMW -->
+      <article class="card reveal" id="bmw">
+        <div class="card-text">
+          <h2>BMW</h2>
+          <p>
+            De fabricante de motores aeronáuticos a ícono del manejo 
+            deportivo.
+          </p>
+          <p><strong>Ícono:</strong> M3 (E30).</p>
+        </div>
+        <div class="card-img">
+          <img src="images/bmw.jpg" alt="BMW M3 E30">
+        </div>
+      </article>
+
+      <!-- Mercedes -->
+      <article class="card reveal" id="mercedes">
+        <div class="card-text">
+          <h2>Mercedes-Benz</h2>
+          <p>
+            Fundada en 1926 en Alemania, sinónimo de lujo, innovación y prestigio.
+          </p>
+          <p><strong>Ícono:</strong> Mercedes-Benz 300 SL “Gullwing”.</p>
+        </div>
+        <div class="card-img">
+          <img src="images/mercedes.jpg" alt="Mercedes-Benz 300 SL Gullwing">
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- OVERLAY GALERÍA (sin cambios) -->
+  <div class="overlay" id="galeriaOverlay" aria-hidden="true" role="dialog">
+    <div class="overlay-content">
+      <div class="overlay-head">
+        <h2>Galería</h2>
+        <button class="btn-cerrar" id="cerrarGaleria" aria-label="Cerrar galería">✕</button>
+      </div>
+      <div class="grid-galeria">
+        <img src="images/galeria1.jpg" alt="Foto 1">
+        <img src="images/galeria2.jpg" alt="Foto 2">
+        <img src="images/galeria3.jpg" alt="Foto 3">
+        <img src="images/galeria4.jpg" alt="Foto 4">
+      </div>
+      <div class="overlay-actions">
+        <button class="btn-primario" id="volverInicioDesdeGaleria">Volver a Inicio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY AUTORES (sin cambios) -->
+  <div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
+    <div class="overlay-content autores">
+      <div class="overlay-head">
+        <h2>Desarrollado por</h2>
+        <button class="btn-cerrar" id="cerrarAutores" aria-label="Cerrar autores">✕</button>
+      </div>
+      <ul class="lista-autores">
+        <li>Alvarez Murcia Nicolas</li>
+        <li>Davila Maldonado Julian</li>
+        <li>Perez Pinlla Alan</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OVERLAY TABLA COMPARATIVA (sin cambios) -->
+  <div class="overlay" id="tablaOverlay" aria-hidden="true" role="dialog">
+    <div class="overlay-content tabla">
+      <div class="overlay-head">
+        <h2>Tabla Comparativa</h2>
+        <button class="btn-cerrar" id="cerrarTabla" aria-label="Cerrar tabla">✕</button>
+      </div>
+      <div class="overlay-body">
+        <table class="tabla-autos">
+          <thead>
+            <tr>
+              <th>Marca</th>
+              <th>Imagen</th>
+              <th>Ícono</th>
+              <th>Año</th>
+              <th>Características</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ford</td>
+              <td><img src="images/ford.jpg" alt="Ford Mustang"></td>
+              <td>Mustang</td>
+              <td>1964</td>
+              <td>Muscle car, accesible, símbolo de libertad</td>
+            </tr>
+            <tr>
+              <td>Lamborghini</td>
+              <td><img src="images/lamborghini.jpg" alt="Lamborghini Miura"></td>
+              <td>Miura</td>
+              <td>1966</td>
+              <td>Primer superdeportivo motor central</td>
+            </tr>
+            <tr>
+              <td>Ferrari</td>
+              <td><img src="images/ferrari.jpg" alt="Ferrari F40"></td>
+              <td>F40</td>
+              <td>1987</td>
+              <td>Ligero, potente, último de Enzo</td>
+            </tr>
+            <tr>
+              <td>BMW</td>
+              <td><img src="images/bmw.jpg" alt="BMW M3 E30"></td>
+              <td>M3 E30</td>
+              <td>1986</td>
+              <td>Equilibrio perfecto, deportivo de calle</td>
+            </tr>
+            <tr>
+              <td>Mercedes</td>
+              <td><img src="images/mercedes.jpg" alt="Mercedes 300 SL"></td>
+              <td>300 SL</td>
+              <td>1954</td>
+              <td>Puertas de ala de gaviota, lujo e innovación</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<!-- OVERLAY INVENTARIO (CORREGIDO) -->
+<div class="overlay" id="inventarioOverlay" aria-hidden="true" role="dialog">
+  <div class="overlay-content tabla">
+    <div class="overlay-head">
+      <h2>Inventario de Carros</h2>
+      <button class="btn-cerrar" id="cerrarInventario" aria-label="Cerrar inventario">✕</button>
+    </div>
+
+    <div class="overlay-body" style="padding:18px">
+
+      <!-- Contenedor para vista en tarjetas -->
+      <div id="cardsInventario" class="grid-cards" style="display:none"></div>
+
+      <!-- Barra de herramientas del inventario -->
+      <section class="formulario" id="toolbarInventario" style="margin-top:0">
+        <h3>Gestión</h3>
+        <div class="form-row" style="flex-wrap:wrap">
+          <input type="text" id="invBuscar" placeholder="Buscar por marca/modelo…">
+          <select id="invFiltroCategoria" aria-label="Filtrar por categoría">
+            <option value="">Todas las categorías</option>
+            <option value="Deportivo">Deportivo</option>
+            <option value="Lujo">Lujo</option>
+            <option value="Clásico">Clásico</option>
+            <option value="SUV">SUV</option>
+            <option value="Híbrido/EV">Híbrido/EV</option>
+          </select>
+
+          <input type="number" id="invPrecioMin" placeholder="Precio min ($)" min="0" style="max-width:140px">
+          <input type="number" id="invPrecioMax" placeholder="Precio max ($)" min="0" style="max-width:140px">
+          <input type="number" id="invAnioMin" placeholder="Año min" min="1900" max="2099" style="max-width:120px">
+          <input type="number" id="invAnioMax" placeholder="Año max" min="1900" max="2099" style="max-width:120px">
+
+          <label style="display:inline-flex;align-items:center;gap:8px">
+            <input type="checkbox" id="invDisponibilidad"> Mostrar solo disponibles
+          </label>
+
+          <button id="invExportar" class="btn-primario" type="button">Exportar JSON</button>
+          <button id="invExportarCSV" class="btn-primario" type="button">Exportar CSV</button>
+          <label for="invImportar" class="btn-primario" style="display:inline-flex;align-           items:center;gap:6px;cursor:pointer">
+            Importar JSON <input id="invImportar" type="file" accept="application/json" style="display:none">
+          </label>
+          <label for="invImportarCSV" class="btn-primario" style="display:inline-flex;align-           items:center;gap:6px;cursor:pointer">
+           Importar CSV <input id="invImportarCSV" type="file" accept=".csv" style="display:none">
+           </label>
+
+          <button id="invVaciar" class="btn-primario" type="button" aria-live="polite">Vaciar Inventario</button>
+        </div>
+      </section>
+
+      <!-- Formulario de alta/edición -->
+      <form id="formInventario" class="formulario" autocomplete="off">
+        <h3>Agregar / Editar Auto</h3>
+        <div class="form-row" style="flex-wrap:wrap">
+          <input type="text" id="iMarca" placeholder="Marca *" required>
+          <input type="text" id="iModelo" placeholder="Modelo *" required>
+          <input type="number" id="iAnio" placeholder="Año *" min="1900" max="2099" required>
+          <select id="iCategoria" required>
+            <option value="" disabled selected>Categoría *</option>
+            <option>Deportivo</option>
+            <option>Lujo</option>
+            <option>Clásico</option>
+            <option>SUV</option>
+            <option>Híbrido/EV</option>
+          </select>
+          <input type="number" id="iStock" placeholder="Cantidad *" min="0" required>
+          <input type="number" id="iPrecio" placeholder="Precio ($) *" min="0" step="0.01" required>
+          <input type="number" id="iCosto" placeholder="Costo ($)" min="0" step="0.01">
+          <input type="text" id="iSKU" placeholder="SKU / ID">
+          <input type="url" id="iImagen" placeholder="URL imagen (opcional)">
+          <button type="submit" class="btn-primario" id="btnGuardarAuto">➕ Guardar</button>
+          <button type="button" class="btn-primario" id="btnCancelarEdicion" style="display:none">Cancelar</button>
+        </div>
+        <input type="hidden" id="iEditIndex" value="">
+      </form>
+
+      <!-- Panel de estadísticas -->
+      <section id="invStats" class="formulario" style="margin-top:12px">
+        <h3>Estadísticas del Inventario</h3>
+        <div class="form-row" style="flex-wrap:wrap; justify-content:space-around; text-align:center">
+          <div class="stat-card"><p>Total Autos</p><h4 id="statTotalAutos">0</h4></div>
+          <div class="stat-card"><p>Stock Total</p><h4 id="statStock">0</h4></div>
+          <div class="stat-card"><p>Valor Promedio</p><h4 id="statPromedio">$0</h4></div>
+          <div class="stat-card"><p>Valor Total</p><h4 id="statValorTotal">$0</h4></div>
+          <div class="stat-card"><p>Marca más frecuente</p><h4 id="statMarcaFrecuente">-</h4></div>
+          <div class="stat-card"><p>Auto más caro</p><h4 id="statAutoCaro">-</h4></div>
+          <div class="stat-card"><p>Mayor margen</p><h4 id="statMayorMargen">-</h4></div>
+        </div>
+      </section>
+
+      <!-- Tabla dinámica -->
+      <div style="overflow:auto;border:1px solid #2a2b36;border-radius:14px">
+        <table class="tabla-autos" id="tablaInventario" aria-describedby="tablaInventarioDesc">
+          <caption id="tablaInventarioDesc" style="caption-side:bottom;padding:8px 12px;color:#b7b7bd">
+            Click en los encabezados para ordenar. Doble click reinicia el orden.
+          </caption>
+          <thead>
+            <tr>
+              <th data-sort="marca" role="button" tabindex="0">Marca</th>
+              <th data-sort="modelo" role="button" tabindex="0">Modelo</th>
+              <th data-sort="anio" role="button" tabindex="0">Año</th>
+              <th data-sort="categoria" role="button" tabindex="0">Categoría</th>
+              <th>Imagen</th>
+              <th data-sort="stock" role="button" tabindex="0">Stock</th>
+              <th data-sort="precio" role="button" tabindex="0">Precio</th>
+              <th data-sort="costo" role="button" tabindex="0">Costo</th>
+              <th data-sort="margen" role="button" tabindex="0">Margen %</th>
+              <th data-sort="valor" role="button" tabindex="0">Valor Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody><!-- filas inyectadas por JS --></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="10" style="text-align:right;font-weight:700">Valor total inventario:</td>
+              <td id="invTotal" style="font-weight:800">$0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Dialogo y template -->
+      <dialog id="dlgConfirmar">
+        <form method="dialog" style="padding:12px 0">
+          <p id="dlgMsg" style="margin:0 0 10px">¿Confirmas la eliminación?</p>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button value="cancel">Cancelar</button>
+            <button value="ok" class="btn-primario">Eliminar</button>
+          </div>
+        </form>
+      </dialog>
+
+      <template id="tplFilaInventario">
+        <tr>
+          <td class="c-marca"></td>
+          <td class="c-modelo"></td>
+          <td class="c-anio"></td>
+          <td class="c-categoria"></td>
+          <td class="c-img"></td>
+          <td class="c-stock"></td>
+          <td class="c-precio"></td>
+          <td class="c-costo"></td>
+          <td class="c-margen"></td>
+          <td class="c-valor"></td>
+          <td class="c-acciones"></td>
+        </tr>
+      </template>
+
+    </div><!-- /.overlay-body -->
+  </div><!-- /.overlay-content -->
+</div><!-- /.overlay -->
+
+    
+  <!-- OVERLAY CONTACTO (sin cambios) -->
+  <div class="overlay" id="contactoOverlay" aria-hidden="true" role="dialog">
+    <div class="overlay-content">
+      <div class="overlay-head">
+        <h2>Contacto</h2>
+        <button class="btn-cerrar" id="cerrarContacto" aria-label="Cerrar contacto">✕</button>
+      </div>
+      <div class="overlay-body">
+        <form action="#" method="post">
+          <div class="form-row">
+            <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
+          </div>
+          <div class="form-row">
+            <input type="email" id="email" name="email" required placeholder="tu@email.com">
+          </div>
+          <div class="form-row">
+            <textarea id="mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje"></textarea>
+          </div>
+          <button type="submit" class="btn-primario">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER (sin cambios) -->
+  <footer class="footer">
+    <p>&copy; 2025 DreamCars — Leyendas Sobre Ruedas</p>
+  </footer>
+
+  <!-- ======================================================
+       Script externo original (mantener exactamente la referencia)
+       - Este es tu script.js que ya tenías; lo dejamos tal cual.
+       ====================================================== -->
+  <script src="script.js" defer></script>
+
+  <!-- ======================================================
+       Script nuevo: lógica para audio y panel de configuración
+       - No toca ni modifica tu script.js; actúa por separado.
+       - Comentarios detallados línea a línea explicando cada proceso.
+       ====================================================== -->
+  <script>
+  /* ============================
+     📻 LÓGICA DE AUDIO Y CONFIG
+     ============================ */
+
+  // 1) Selección de elementos DOM (accedemos a los controles que creamos arriba).
+  const bgAudio = document.getElementById('bgAudio');           // elemento <audio> para música de fondo
+  const btnConfig = document.getElementById('btnConfig');       // botón que abre/cierra panel config
+  const configPanel = document.getElementById('configPanel');   // panel flotante con controles
+  const btnCloseConfig = document.getElementById('btnCloseConfig'); // botón para cerrar panel
+  const btnPlayPause = document.getElementById('btnPlayPause'); // botón play/pause
+  const btnMute = document.getElementById('btnMute');           // botón mute
+  const volumeRange = document.getElementById('volumeRange');   // slider de volumen
+
+  // 2) Inicialización de valores (intentar recuperar preferencias desde localStorage)
+  // Leer volumen guardado (si existe). Si no existe, usar 0.6 por defecto.
+  const storedVolume = parseFloat(localStorage.getItem('dreamcars_volume'));
+  const initialVolume = Number.isFinite(storedVolume) ? storedVolume : 0.6;
+
+  // Aplicamos el volumen inicial al audio y al slider.
+  bgAudio.volume = initialVolume;
+  volumeRange.value = initialVolume;
+
+  // Leer estado mute guardado (si existe). Si no existe, usar false.
+  const storedMuted = localStorage.getItem('dreamcars_muted');
+  bgAudio.muted = storedMuted === 'true' ? true : false;
+  btnMute.setAttribute('aria-pressed', bgAudio.muted ? 'true' : 'false');
+  updateMuteButtonVisual(bgAudio.muted); // actualizamos icono/estilo del botón
+
+  // Lectura del estado de reproducción guardado (por si el usuario dejó en pausa)
+  const storedPlaying = localStorage.getItem('dreamcars_playing');
+  let isPlaying = storedPlaying === 'true' ? true : false;
+
+  // Si en preferencias quedó como "playing", intentamos reproducir.
+  // Nota: algunos navegadores bloquean autoplay sin interacción; por eso manejamos fallos silenciosamente.
+  if (isPlaying) {
+    try { bgAudio.play().catch(()=>{/* autoplay bloqueado, esperar interacción */}); } catch(e){}
+    btnPlayPause.setAttribute('aria-pressed','true');
+  } else {
+    btnPlayPause.setAttribute('aria-pressed','false');
+  }
+
+  // 3) FUNCIONES AUXILIARES (explicadas línea a línea)
+
+  // Actualiza el icono y etiquetas del botón de mute según el estado (muted = true/false)
+  function updateMuteButtonVisual(muted) {
+    // Si está silenciado, mostramos icono 🔇 y una clase visual
+    if (muted) {
+      btnMute.textContent = '🔇';
+      btnMute.classList.add('muted');
+      btnMute.setAttribute('aria-pressed','true');
+    } else {
+      // Si no está silenciado, mostramos icono de volumen y normalizamos la apariencia
+      btnMute.textContent = '🔊';
+      btnMute.classList.remove('muted');
+      btnMute.setAttribute('aria-pressed','false');
+    }
+  }
+
+  // Alterna reproducción (play/pause)
+  async function togglePlayPause() {
+    // Si el audio está pausado, intentar reproducir
+    if (bgAudio.paused) {
+      try {
+        await bgAudio.play();           // intentar reproducir; puede fallar si el navegador lo bloquea
+        isPlaying = true;               // marcamos estado local
+        btnPlayPause.setAttribute('aria-pressed','true'); // accesibilidad
+        localStorage.setItem('dreamcars_playing','true'); // guardamos preferencia
+      } catch (err) {
+        // Si falla la reproducción por autoplay, indicamos que no está reproduciendo.
+        isPlaying = false;
+        btnPlayPause.setAttribute('aria-pressed','false');
+      }
+    } else {
+      // Si está reproduciendo, lo pausamos
+      bgAudio.pause();
+      isPlaying = false;
+      btnPlayPause.setAttribute('aria-pressed','false');
+      localStorage.setItem('dreamcars_playing','false');
+    }
+  }
+
+  // Alterna mute/unmute
+  function toggleMute() {
+    bgAudio.muted = !bgAudio.muted;                      // cambiamos la propiedad muted del audio
+    updateMuteButtonVisual(bgAudio.muted);               // actualizamos visual del botón
+    localStorage.setItem('dreamcars_muted', bgAudio.muted ? 'true' : 'false'); // guardamos preferencia
+  }
+
+  // Ajusta volumen desde el slider (valor entre 0 y 1)
+  function setVolume(value) {
+    const v = Math.max(0, Math.min(1, Number(value)));  // sanitizamos valor
+    bgAudio.volume = v;                                 // aplicamos al audio
+    if (v > 0 && bgAudio.muted) {                       // si sube volumen y estaba muteado, desmuteamos
+      bgAudio.muted = false;
+      updateMuteButtonVisual(false);
+      localStorage.setItem('dreamcars_muted','false');
+    }
+    localStorage.setItem('dreamcars_volume', String(v)); // guardamos preferencia
+  }
+
+  // Abre o cierra el panel de configuración
+  function toggleConfigPanel(forceClose = false) {
+    const isOpen = configPanel.classList.contains('open'); // comprobamos estado actual
+    if (forceClose) {
+      configPanel.classList.remove('open');
+      btnConfig.setAttribute('aria-expanded','false');
+      return;
+    }
+    if (isOpen) {
+      configPanel.classList.remove('open');
+      btnConfig.setAttribute('aria-expanded','false');
+    } else {
+      configPanel.classList.add('open');
+      btnConfig.setAttribute('aria-expanded','true');
+    }
+  }
+
+  // Cerrar panel si se pulsa fuera (ayuda a UX)
+  function clickOutsideToClose(e) {
+    if (!configPanel.classList.contains('open')) return;
+    if (!configPanel.contains(e.target) && e.target !== btnConfig) {
+      toggleConfigPanel(true);
+    }
+  }
+
+  // 4) ASIGNACIÓN DE EVENTOS (con explicación)
+  // - Play/Pause: al click del botón de reproducción
+  btnPlayPause.addEventListener('click', (e)=>{
+    e.preventDefault();
+    togglePlayPause(); // llamamos a la función que alterna reproducción
+  });
+
+  // - Mute toggle: al click del botón de mute
+  btnMute.addEventListener('click', (e)=>{
+    e.preventDefault();
+    toggleMute(); // alterna mute/unmute y guarda preferencia
+  });
+
+  // - Slider de volumen: al cambiar, actualizamos volumen inmediatamente
+  volumeRange.addEventListener('input', (e)=>{
+    setVolume(e.target.value); // actualiza audio y guarda preferencia
+  });
+
+  // - Botón de abrir/cerrar panel config: alterna clase 'open'
+  btnConfig.addEventListener('click', (e)=>{
+    e.preventDefault();
+    toggleConfigPanel(); // abre o cierra el panel
+  });
+
+  // - Botón interno de cerrar panel (en la esquina del panel)
+  btnCloseConfig.addEventListener('click', (e)=>{
+    e.preventDefault();
+    toggleConfigPanel(true); // forzamos cierre
+  });
+
+  // - Cerrar panel al hacer click fuera
+  document.addEventListener('click', clickOutsideToClose);
+
+  // - Cerrar panel con Escape para accesibilidad
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape') {
+      // si el panel está abierto, lo cerramos
+      if (configPanel.classList.contains('open')) toggleConfigPanel(true);
+    }
+  });
+
+  // 5) Sincronización UI <-> Audio (estado inicial)
+  // Actualiza el texto del botón play/pause según si el audio está reproduciendo
+  function updatePlayPauseVisual() {
+    if (bgAudio.paused) {
+      btnPlayPause.textContent = '▶ / ⏸'; // indicar que se puede reproducir
+      btnPlayPause.setAttribute('aria-pressed','false');
+    } else {
+      btnPlayPause.textContent = '⏸ / ▶'; // indicar que se puede pausar
+      btnPlayPause.setAttribute('aria-pressed','true');
+    }
+  }
+
+  // Listener para cambios en el audio (play/pause) - mantiene la UI sincronizada
+  bgAudio.addEventListener('play', ()=> { updatePlayPauseVisual(); localStorage.setItem('dreamcars_playing','true'); });
+  bgAudio.addEventListener('pause', ()=> { updatePlayPauseVisual(); localStorage.setItem('dreamcars_playing','false'); });
+
+  // Al cargar la página, inicializamos la UI con los valores actuales
+  window.addEventListener('load', ()=> {
+    // establecer slider al volumen actual del audio (ya inicializado arriba)
+    volumeRange.value = bgAudio.volume;
+    updateMuteButtonVisual(bgAudio.muted);
+    updatePlayPauseVisual();
+
+    // intento de reproducción suave si el usuario ya indicó 'play' antes (pero no forzamos)
+    if (localStorage.getItem('dreamcars_playing') === 'true') {
+      bgAudio.play().catch(()=>{/* autoplay bloqueado; el usuario debe interactuar */});
+    }
+  });
+
+  // 6) Limpieza: cuando la página se descarga, guardamos el estado final
+  window.addEventListener('beforeunload', ()=>{
+    localStorage.setItem('dreamcars_volume', String(bgAudio.volume));
+    localStorage.setItem('dreamcars_muted', bgAudio.muted ? 'true' : 'false');
+    localStorage.setItem('dreamcars_playing', bgAudio.paused ? 'false' : 'true');
+  });
+
+  /* ========== FIN LÓGICA DE AUDIO/CONFIG ========== */
+  </script>
+</body>
+</html>
