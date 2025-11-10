@@ -36,6 +36,16 @@ linkAutores.addEventListener('click', (e)=>{
 });
 cerrarAutoresBtn.addEventListener('click', ()=> cerrarOverlay(autores));
 
+// === AUTORES DESDE FOOTER ===
+const footerAutoresBtn = document.getElementById('footerAutores');
+if (footerAutoresBtn) {
+  footerAutoresBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    abrirOverlay(autores);
+  });
+}
+
+
 // === TABLA COMPARATIVA ===
 const linkTabla  = document.getElementById('linkTabla');
 const tabla      = document.getElementById('tablaOverlay');
@@ -769,141 +779,6 @@ invImportarCSV.addEventListener("change", (e) => {
   reader.readAsText(file);
   e.target.value = "";
 });
-/* ============================
-   🔐 LOGIN Y REGISTRO LOCAL
-   ============================ */
 
-const loginOverlay = document.getElementById('loginOverlay');
-const registroOverlay = document.getElementById('registroOverlay');
-const linkLogin = document.getElementById('linkLogin');
-const linkRegistro = document.getElementById('linkRegistro');
-const cerrarLogin = document.getElementById('cerrarLogin');
-const cerrarRegistro = document.getElementById('cerrarRegistro');
-const abrirRegistro = document.getElementById('abrirRegistro');
-const abrirLogin = document.getElementById('abrirLogin');
-const formLogin = document.getElementById('formLogin');
-const formRegistro = document.getElementById('formRegistro');
 
-/* === FUNCIONES PARA MOSTRAR / OCULTAR OVERLAYS === */
-function abrirOverlay(el) {
-  // cerrar otros overlays activos
-  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('activo'));
-  // mostrar el seleccionado
-  el.classList.add('activo');
-  el.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden'; // evitar scroll de fondo
-}
 
-function cerrarOverlay(el) {
-  el.classList.remove('activo');
-  el.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-
-/* === ENLACES DEL HEADER === */
-linkLogin.addEventListener('click', e => { 
-  e.preventDefault(); 
-  abrirOverlay(loginOverlay); 
-});
-linkRegistro.addEventListener('click', e => { 
-  e.preventDefault(); 
-  abrirOverlay(registroOverlay); 
-});
-
-/* === BOTONES DE CIERRE === */
-cerrarLogin.addEventListener('click', e => { 
-  e.preventDefault(); 
-  cerrarOverlay(loginOverlay); 
-});
-cerrarRegistro.addEventListener('click', e => { 
-  e.preventDefault(); 
-  cerrarOverlay(registroOverlay); 
-});
-
-/* === CAMBIO ENTRE FORMULARIOS === */
-abrirRegistro.addEventListener('click', e => { 
-  e.preventDefault(); 
-  cerrarOverlay(loginOverlay); 
-  abrirOverlay(registroOverlay); 
-});
-abrirLogin.addEventListener('click', e => { 
-  e.preventDefault(); 
-  cerrarOverlay(registroOverlay); 
-  abrirOverlay(loginOverlay); 
-});
-
-/* === REGISTRO DE USUARIO (LocalStorage) === */
-formRegistro.addEventListener('submit', e => {
-  e.preventDefault();
-  const nombre = document.getElementById('regNombre').value.trim();
-  const email = document.getElementById('regEmail').value.trim().toLowerCase();
-  const pass = document.getElementById('regPassword').value;
-  const conf = document.getElementById('regConfirmar').value;
-
-  if (!nombre || !email || !pass || !conf) {
-    alert('Por favor completa todos los campos.');
-    return;
-  }
-  if (pass !== conf) {
-    alert('Las contraseñas no coinciden.');
-    return;
-  }
-
-  let usuarios = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
-  if (usuarios.find(u => u.email === email)) {
-    alert('Ya existe un usuario con ese correo.');
-    return;
-  }
-
-  usuarios.push({ nombre, email, pass });
-  localStorage.setItem('dreamcars_users', JSON.stringify(usuarios));
-  alert('Registro exitoso. Ahora puedes iniciar sesión.');
-  formRegistro.reset();
-  cerrarOverlay(registroOverlay);
-  abrirOverlay(loginOverlay);
-});
-
-/* === INICIO DE SESIÓN (LocalStorage) === */
-formLogin.addEventListener('submit', e => {
-  e.preventDefault();
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pass = document.getElementById('loginPassword').value;
-  const usuarios = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
-  const user = usuarios.find(u => u.email === email && u.pass === pass);
-
-  if (!user) {
-    alert('Credenciales incorrectas.');
-    return;
-  }
-
-  localStorage.setItem('dreamcars_user', JSON.stringify(user));
-  alert(`Bienvenido, ${user.nombre}`);
-  cerrarOverlay(loginOverlay);
-  actualizarEstadoLogin();
-});
-
-/* === ACTUALIZAR HEADER SEGÚN ESTADO === */
-function actualizarEstadoLogin() {
-  const user = JSON.parse(localStorage.getItem('dreamcars_user'));
-  if (user) {
-    linkLogin.textContent = `👤 ${user.nombre.split(' ')[0]}`;
-    linkLogin.removeAttribute('aria-controls');
-    linkLogin.onclick = e => {
-      e.preventDefault();
-      if (confirm('¿Deseas cerrar sesión?')) {
-        localStorage.removeItem('dreamcars_user');
-        linkLogin.textContent = 'Login';
-        linkLogin.onclick = null;
-        linkRegistro.style.display = 'inline';
-        location.reload();
-      }
-    };
-    linkRegistro.style.display = 'none';
-  } else {
-    linkLogin.textContent = 'Login';
-    linkRegistro.style.display = 'inline';
-  }
-}
-
-/* === EJECUTAR AL CARGAR === */
-actualizarEstadoLogin();
