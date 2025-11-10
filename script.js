@@ -784,31 +784,55 @@ const abrirLogin = document.getElementById('abrirLogin');
 const formLogin = document.getElementById('formLogin');
 const formRegistro = document.getElementById('formRegistro');
 
-// Funciones para mostrar y ocultar overlays
+/* === FUNCIONES PARA MOSTRAR / OCULTAR OVERLAYS === */
 function abrirOverlay(el) {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
-  el.classList.add('open');
+  // cerrar otros overlays activos
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('activo'));
+  // mostrar el seleccionado
+  el.classList.add('activo');
   el.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden'; // evitar scroll de fondo
 }
 
 function cerrarOverlay(el) {
-  el.classList.remove('open');
+  el.classList.remove('activo');
   el.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
 }
 
-// Enlaces del header
-linkLogin.addEventListener('click', e => { e.preventDefault(); abrirOverlay(loginOverlay); });
-linkRegistro.addEventListener('click', e => { e.preventDefault(); abrirOverlay(registroOverlay); });
+/* === ENLACES DEL HEADER === */
+linkLogin.addEventListener('click', e => { 
+  e.preventDefault(); 
+  abrirOverlay(loginOverlay); 
+});
+linkRegistro.addEventListener('click', e => { 
+  e.preventDefault(); 
+  abrirOverlay(registroOverlay); 
+});
 
-// Botones de cierre
-cerrarLogin.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(loginOverlay); });
-cerrarRegistro.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(registroOverlay); });
+/* === BOTONES DE CIERRE === */
+cerrarLogin.addEventListener('click', e => { 
+  e.preventDefault(); 
+  cerrarOverlay(loginOverlay); 
+});
+cerrarRegistro.addEventListener('click', e => { 
+  e.preventDefault(); 
+  cerrarOverlay(registroOverlay); 
+});
 
-// Intercambio entre formularios
-abrirRegistro.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(loginOverlay); abrirOverlay(registroOverlay); });
-abrirLogin.addEventListener('click', e => { e.preventDefault(); cerrarOverlay(registroOverlay); abrirOverlay(loginOverlay); });
+/* === CAMBIO ENTRE FORMULARIOS === */
+abrirRegistro.addEventListener('click', e => { 
+  e.preventDefault(); 
+  cerrarOverlay(loginOverlay); 
+  abrirOverlay(registroOverlay); 
+});
+abrirLogin.addEventListener('click', e => { 
+  e.preventDefault(); 
+  cerrarOverlay(registroOverlay); 
+  abrirOverlay(loginOverlay); 
+});
 
-// Registro de usuario (modo localStorage)
+/* === REGISTRO DE USUARIO (LocalStorage) === */
 formRegistro.addEventListener('submit', e => {
   e.preventDefault();
   const nombre = document.getElementById('regNombre').value.trim();
@@ -816,31 +840,36 @@ formRegistro.addEventListener('submit', e => {
   const pass = document.getElementById('regPassword').value;
   const conf = document.getElementById('regConfirmar').value;
 
+  if (!nombre || !email || !pass || !conf) {
+    alert('Por favor completa todos los campos.');
+    return;
+  }
   if (pass !== conf) {
-    alert('Las contraseñas no coinciden');
+    alert('Las contraseñas no coinciden.');
     return;
   }
 
-  let users = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
-  if (users.find(u => u.email === email)) {
-    alert('Ya existe un usuario registrado con este correo.');
+  let usuarios = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
+  if (usuarios.find(u => u.email === email)) {
+    alert('Ya existe un usuario con ese correo.');
     return;
   }
 
-  users.push({ nombre, email, pass });
-  localStorage.setItem('dreamcars_users', JSON.stringify(users));
+  usuarios.push({ nombre, email, pass });
+  localStorage.setItem('dreamcars_users', JSON.stringify(usuarios));
   alert('Registro exitoso. Ahora puedes iniciar sesión.');
+  formRegistro.reset();
   cerrarOverlay(registroOverlay);
   abrirOverlay(loginOverlay);
 });
 
-// Inicio de sesión (modo localStorage)
+/* === INICIO DE SESIÓN (LocalStorage) === */
 formLogin.addEventListener('submit', e => {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const pass = document.getElementById('loginPassword').value;
-  const users = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
-  const user = users.find(u => u.email === email && u.pass === pass);
+  const usuarios = JSON.parse(localStorage.getItem('dreamcars_users') || '[]');
+  const user = usuarios.find(u => u.email === email && u.pass === pass);
 
   if (!user) {
     alert('Credenciales incorrectas.');
@@ -850,11 +879,10 @@ formLogin.addEventListener('submit', e => {
   localStorage.setItem('dreamcars_user', JSON.stringify(user));
   alert(`Bienvenido, ${user.nombre}`);
   cerrarOverlay(loginOverlay);
-  // Actualiza el header
   actualizarEstadoLogin();
 });
 
-// Muestra nombre del usuario logueado
+/* === ACTUALIZAR HEADER SEGÚN ESTADO === */
 function actualizarEstadoLogin() {
   const user = JSON.parse(localStorage.getItem('dreamcars_user'));
   if (user) {
@@ -862,10 +890,11 @@ function actualizarEstadoLogin() {
     linkLogin.removeAttribute('aria-controls');
     linkLogin.onclick = e => {
       e.preventDefault();
-      if (confirm('¿Cerrar sesión?')) {
+      if (confirm('¿Deseas cerrar sesión?')) {
         localStorage.removeItem('dreamcars_user');
         linkLogin.textContent = 'Login';
         linkLogin.onclick = null;
+        linkRegistro.style.display = 'inline';
         location.reload();
       }
     };
@@ -876,7 +905,5 @@ function actualizarEstadoLogin() {
   }
 }
 
-// Ejecutar al cargar
+/* === EJECUTAR AL CARGAR === */
 actualizarEstadoLogin();
-
-
