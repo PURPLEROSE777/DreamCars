@@ -1,653 +1,784 @@
-:root{
-  --bg: #0e0e0f;
-  --bg-2:#151517;
-  --card:#1c1c20;
-  --text:#f3f3f3;
-  --muted:#b7b7bd;
-  --accent:#e50914;
-  --accent-2:#ff4d57;
-  --shadow: 0 10px 30px rgba(0,0,0,.45);
+// === NAVEGACIÓN: Botón "Inicio" ===
+const linkInicio = document.getElementById('linkInicio');
+linkInicio.addEventListener('click', (e) => {
+  cerrarOverlays();
+  const destino = document.querySelector('#inicio');
+  if (destino) {
+    e.preventDefault();
+    destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+
+// === GALERÍA ===
+const linkGaleria  = document.getElementById('linkGaleria');
+const galeria      = document.getElementById('galeriaOverlay');
+const cerrarGaleriaBtn = document.getElementById('cerrarGaleria');
+const volverInicioDesdeGaleria = document.getElementById('volverInicioDesdeGaleria');
+
+linkGaleria.addEventListener('click', (e)=>{
+  e.preventDefault();
+  abrirOverlay(galeria);
+});
+cerrarGaleriaBtn.addEventListener('click', ()=> cerrarOverlay(galeria));
+volverInicioDesdeGaleria.addEventListener('click', ()=>{
+  cerrarOverlay(galeria);
+  document.querySelector('#inicio').scrollIntoView({ behavior:'smooth' });
+});
+
+// === AUTORES ===
+const linkAutores  = document.getElementById('linkAutores');
+const autores      = document.getElementById('autoresOverlay');
+const cerrarAutoresBtn = document.getElementById('cerrarAutores');
+
+linkAutores.addEventListener('click', (e)=>{
+  e.preventDefault();
+  abrirOverlay(autores);
+});
+cerrarAutoresBtn.addEventListener('click', ()=> cerrarOverlay(autores));
+
+// === AUTORES DESDE FOOTER ===
+const footerAutoresBtn = document.getElementById('footerAutores');
+if (footerAutoresBtn) {
+  footerAutoresBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    abrirOverlay(autores);
+  });
 }
 
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
-  color:var(--text);
-  background:
-    radial-gradient(1200px 600px at 10% -10%, #1a1a1f 0, transparent 60%),
-    radial-gradient(1200px 600px at 90% -10%, #17171c 0, transparent 60%),
-    var(--bg);
+
+// === TABLA COMPARATIVA ===
+const linkTabla  = document.getElementById('linkTabla');
+const tabla      = document.getElementById('tablaOverlay');
+const cerrarTablaBtn = document.getElementById('cerrarTabla');
+
+linkTabla.addEventListener('click', (e)=>{
+  e.preventDefault();
+  abrirOverlay(tabla);
+});
+cerrarTablaBtn.addEventListener('click', ()=> cerrarOverlay(tabla));
+
+// === INVENTARIO ===
+const linkInventario  = document.getElementById('linkInventario');
+const inventarioOv    = document.getElementById('inventarioOverlay');
+const cerrarInventarioBtn = document.getElementById('cerrarInventario');
+
+linkInventario.addEventListener('click', (e)=>{
+  e.preventDefault();
+  abrirOverlay(inventarioOv);
+});
+cerrarInventarioBtn.addEventListener('click', ()=> cerrarOverlay(inventarioOv));
+
+// === CONTACTO ===
+const linkContacto = document.getElementById("linkContacto");
+const contactoOverlay = document.getElementById("contactoOverlay");
+const cerrarContacto = document.getElementById("cerrarContacto");
+
+if (linkContacto && contactoOverlay && cerrarContacto) {
+  linkContacto.addEventListener("click", (e) => {
+    e.preventDefault();
+    abrirOverlay(contactoOverlay);
+  });
+  cerrarContacto.addEventListener("click", () => {
+    cerrarOverlay(contactoOverlay);
+  });
 }
 
-/* === HEADER y NAV === */
-.header{
-  position:sticky; top:0; z-index:10;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 28px;
-  background:rgba(10,10,12,.85);
-  backdrop-filter: blur(6px);
-  border-bottom:1px solid #22232a;
+// === FUNCIONES PARA OVERLAYS ===
+function abrirOverlay(el){
+  el.classList.add('activo');
+  el.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
 }
-.brand{
-  font-size:22px; font-weight:800; letter-spacing:.5px;
-  color:var(--accent);
+function cerrarOverlay(el){
+  el.classList.remove('activo');
+  el.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
 }
-.nav a{
-  margin-left:18px; text-decoration:none; color:var(--text); font-weight:600;
-  padding:8px 10px; border-radius:10px; position:relative;
-}
-.nav a::after{
-  content:""; position:absolute; left:10px; right:10px; bottom:6px; height:2px;
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));
-  opacity:0; transform:scaleX(.2); transition:.25s;
-}
-.nav a:hover{ color:#fff; }
-.nav a:hover::after{ opacity:1; transform:scaleX(1); }
-
-/* === SECCIÓN INICIO === */
-.inicio{ max-width:1200px; margin:40px auto; padding:0 20px 40px; }
-.intro{
-  background: linear-gradient(180deg, #141418, #121216);
-  border:1px solid #21222a; border-radius:20px; box-shadow:var(--shadow);
-  padding:40px 36px; margin-top:10px;
-}
-.titulo{ margin:0 0 6px; font-size:40px; letter-spacing:.3px; }
-.subtitulo{ margin:0; color:var(--muted); }
-
-/* === CARDS DE MARCAS === */
-.marcas{ margin-top:36px; display:grid; grid-template-columns:1fr; gap:24px; }
-.card{
-  display:grid; grid-template-columns: 1.1fr .9fr; gap:20px;
-  background:var(--card); border:1px solid #242531;
-  border-radius:20px; box-shadow:var(--shadow);
-  padding:22px; transform:translateY(12px); opacity:0; transition:.6s ease;
-}
-.card.revealed{ transform:none; opacity:1; }
-.card:hover{ outline:1px solid #2c2d3a; }
-.card h2{ margin:0 0 8px; color:var(--accent); font-size:26px; }
-.card p{ margin:0 0 10px; color:#ddd; line-height:1.55; }
-.card-img{
-  overflow:hidden; border-radius:16px; align-self:stretch;
-  background:#101014; display:flex; align-items:center; justify-content:center;
-}
-.card-img img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  transform:scale(1.02); transition: transform .4s ease;
-}
-.card:hover .card-img img{ transform:scale(1.08); }
-
-/* === FORMULARIO GENERAL (contacto o sugerencias) === */
-.formulario{
-  max-width:700px; margin:34px auto 6px; padding:22px 22px 26px;
-  background:var(--bg-2); border:1px solid #242531; border-radius:18px; box-shadow:var(--shadow);
-  text-align:center;
-}
-.formulario h3{ margin:0 0 12px; color:var(--accent); }
-.form-row{ display:flex; gap:10px; justify-content:center; }
-.form-row input{
-  flex:1; max-width:420px; padding:12px 14px; border-radius:12px;
-  border:1px solid #2a2b36; background:#111216; color:#fff; outline:none;
-}
-.form-row button{
-  padding:12px 16px; border:0; border-radius:12px; cursor:pointer;
-  background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; font-weight:700;
-  box-shadow:0 6px 18px rgba(229,9,20,.35);
-}
-#mensaje{ margin-top:8px; color:#a7e5b8; min-height:20px; }
-
-/* === OVERLAYS (galería, autores, contacto) === */
-.overlay{
-  position:fixed; inset:0; background:rgba(8,8,10,.72);
-  backdrop-filter: blur(6px);
-  display:none; align-items:center; justify-content:center; z-index:50;
-}
-.overlay.activo{ display:flex; }
-.overlay-content{
-  width:min(1100px,92vw);
-  max-height:min(86vh,900px);
-  overflow:hidden; display:flex; flex-direction:column;
-  background:#121216; border:1px solid #2a2b36; border-radius:18px; box-shadow:var(--shadow);
-}
-.overlay-head{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 18px; border-bottom:1px solid #252634; background:#101015;
-}
-.btn-cerrar{
-  border:0; background:#1e1f2a; color:#fff; width:36px; height:36px; border-radius:10px;
-  cursor:pointer; font-size:18px;
-}
-.grid-galeria{
-  padding:18px; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; overflow:auto;
-}
-.grid-galeria img{
-  width:100%; height:220px; object-fit:cover; border-radius:12px;
-  transition: transform .25s;
-}
-.grid-galeria img:hover{ transform:scale(1.03); }
-.overlay-actions{ padding:14px 18px; border-top:1px solid #252634; display:flex; justify-content:flex-end; background:#101015; }
-.btn-primario{
-  padding:10px 14px; border:0; border-radius:10px; cursor:pointer; font-weight:700; color:#fff;
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+function cerrarOverlays(){
+  [galeria, autores, tabla, contactoOverlay, inventarioOv].forEach(o=>{
+    if (o && o.classList.contains('activo')) cerrarOverlay(o);
+  });
 }
 
-/* === AUTORES === */
-.autores .lista-autores{
-  padding:18px; list-style:none; display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
-}
-.autores .lista-autores li{
-  background:#171821; border:1px solid #282936; padding:10px 12px; border-radius:12px;
+// Cerrar overlays con tecla ESC
+document.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape') cerrarOverlays();
+});
+
+// === EFECTO REVEAL (animación al hacer scroll) ===
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if (entry.isIntersecting){
+      entry.target.classList.add('revealed');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: .12 });
+
+document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+
+/* ===================================================
+   🔎 BARRA DE BÚSQUEDA DE MARCAS
+   =================================================== */
+const btnSugerir = document.getElementById('btnSugerir');
+const inputMarca = document.getElementById('marca');
+const msg        = document.getElementById('mensaje');
+const resultados = document.getElementById('resultados');
+
+// Capturar todas las cards ya existentes
+const autos = Array.from(document.querySelectorAll('.card')).map(card => {
+  return {
+    nombre: card.querySelector('h2').textContent.trim(),
+    img: card.querySelector('img').getAttribute('src'),
+    id: card.id
+  };
+});
+
+// Botón buscar
+btnSugerir.addEventListener('click', (e)=>{
+  e.preventDefault();
+  buscarMarca();
+});
+
+// Enter = buscar
+inputMarca.addEventListener('keyup', (e)=>{
+  if (e.key === 'Enter') {
+    buscarMarca();
+  } else {
+    mostrarResultados(inputMarca.value.trim());
+  }
+});
+
+function buscarMarca(){
+  const valor = (inputMarca.value || '').trim().toLowerCase();
+  if (!valor){
+    msg.style.color = '#ffce69';
+    msg.textContent = 'Por favor escribe una marca.';
+    resultados.innerHTML = '';
+    return;
+  }
+  const filtrados = autos.filter(auto => auto.nombre.toLowerCase().includes(valor));
+  if (filtrados.length > 0){
+    msg.style.color = '#a7e5b8';
+    msg.textContent = `Se encontraron ${filtrados.length} resultados:`;
+    renderResultados(filtrados);
+  } else {
+    msg.style.color = '#ff6961';
+    msg.textContent = `No se encontró ninguna marca con "${valor}".`;
+    resultados.innerHTML = '';
+  }
 }
 
-/* === FOOTER === */
-.footer{
-  border-top:1px solid #23242f; color:#bdbdc6;
-  text-align:center; padding:26px 14px; margin-top:30px;
+function renderResultados(lista){
+  resultados.innerHTML = lista.map(auto => `
+    <div class="preview-card" onclick="document.getElementById('${auto.id}').scrollIntoView({behavior:'smooth'})">
+      <img src="${auto.img}" alt="${auto.nombre}">
+      <p>${auto.nombre}</p>
+    </div>
+  `).join('');
 }
 
-/* === ACCESIBILIDAD === */
-a,button,input{ outline-offset: 3px; }
-a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
-
-/* === CONTACTO === */
-#contactoOverlay .overlay-body { padding: 20px; }
-#contactoOverlay textarea {
-  width: 100%;
-  border-radius: 10px;
-  border: 1px solid #2a2b36;
-  background: #111216;
-  color: #fff;
-  padding: 10px;
+function mostrarResultados(valor){
+  if (!valor) {
+    resultados.innerHTML = '';
+    return;
+  }
+  const filtrados = autos.filter(auto => auto.nombre.toLowerCase().includes(valor.toLowerCase()));
+  renderResultados(filtrados);
 }
 
 /* ===================================================
-   🔎 RESULTADOS DE BÚSQUEDA DE MARCAS
+   🆕 SCROLL PARA TABLA COMPARATIVA
    =================================================== */
-#resultados {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
-  padding: 18px;
-  background: var(--bg-2);
-  border: 1px solid #242531;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  animation: fadeIn 0.4s ease;
-}
-
-.preview-card {
-  background: var(--card);
-  border: 1px solid #2a2b36;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-  cursor: pointer;
-  text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.preview-card img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  display: block;
-  border-bottom: 1px solid #2a2b36;
-  transition: transform 0.3s ease;
-}
-
-.preview-card p {
-  margin: 10px 0;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
-  letter-spacing: 0.3px;
-}
-
-/* Efectos hover con glow */
-.preview-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 0 18px rgba(229, 9, 20, 0.6), 0 10px 30px rgba(229, 9, 20, 0.35);
-  border-color: var(--accent-2);
-}
-.preview-card:hover img { transform: scale(1.08); }
-
-/* Animación suave al aparecer */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-/* === Ajuste de previews en resultados === */
-.preview-card img {
-  width: 100%;
-  height: 140px;          /* 🔹 altura fija más cómoda */
-  object-fit: contain;    /* 🔹 evita deformaciones, muestra la imagen completa */
-  background: #0f0f12;    /* 🔹 fondo neutro para cuando la imagen no llena todo */
-  display: block;
-  border-bottom: 1px solid #2a2b36;
-  transition: transform 0.3s ease;
-  padding: 6px;           /* 🔹 pequeño espacio para que no corte el auto */
-  border-radius: 8px;
-}
-
-/* Hover suave con proporción correcta */
-.preview-card:hover img {
-  transform: scale(1.05);
-}
-
-/* === Tabla comparativa de autos (overlay tabla) === */
-.tabla-autos {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
-  border: 1px solid #2a2b36;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-
-.tabla-autos th, .tabla-autos td {
-  padding: 12px 14px;
-  text-align: center;
-  border-bottom: 1px solid #2a2b36;
-}
-
-.tabla-autos th {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.tabla-autos td img {
-  width: 120px;
-  height: 80px;
-  object-fit: contain;    /* 🔹 nunca se deforma la proporción */
-  background: #0f0f12;
-  border-radius: 8px;
-  padding: 4px;
-}
-
-/* Hover en filas */
-.tabla-autos tr:hover {
-  background: rgba(229, 9, 20, 0.08);
-  transition: background 0.3s ease;
+const tablaOverlayEl = document.getElementById("tablaOverlay");
+if (tablaOverlayEl) {
+  const tablaBody = tablaOverlayEl.querySelector(".overlay-body");
+  if (tablaBody) {
+    tablaBody.style.maxHeight = "70vh";
+    tablaBody.style.overflowY = "auto";
+  }
 }
 
 /* ===================================================
-   📦 SISTEMA DE INVENTARIO
+   🆕 INVENTARIO (CRUD con LocalStorage)
    =================================================== */
+const formInventario = document.getElementById("formInventario");
+const tablaInventario = document.querySelector("#tablaInventario tbody");
+const tplFila = document.getElementById("tplFilaInventario");
+const invBuscar = document.getElementById("invBuscar");
+const invFiltroCategoria = document.getElementById("invFiltroCategoria");
+const invTotal = document.getElementById("invTotal");
+const btnCancelarEdicion = document.getElementById("btnCancelarEdicion");
+const dlgConfirmar = document.getElementById("dlgConfirmar");
+const dlgMsg = document.getElementById("dlgMsg");
 
-/* Overlay inventario */
-#inventarioOverlay .overlay-body {
-  padding: 18px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  max-height: 75vh;       /* 🔹 scroll vertical */
-  overflow-y: auto;
-}
+// Estadísticas inventario
+const statTotalAutos   = document.getElementById("statTotalAutos");
+const statStock        = document.getElementById("statStock");
+const statPromedio     = document.getElementById("statPromedio");
+const statValorTotal   = document.getElementById("statValorTotal");
+const statMarcaFrecuente = document.getElementById("statMarcaFrecuente");
+const statAutoCaro       = document.getElementById("statAutoCaro");
+const statMayorMargen    = document.getElementById("statMayorMargen");
 
-/* Formulario de inventario */
-#formInventario {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-  background: var(--bg-2);
-  border: 1px solid #2a2b36;
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: var(--shadow);
-}
+let inventario = JSON.parse(localStorage.getItem("inventarioAutos")) || [];
 
-#formInventario input, 
-#formInventario select {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #2a2b36;
-  background: #111216;
-  color: #fff;
-}
+// Render tabla
+function renderInventario(lista = inventario) {
+  tablaInventario.innerHTML = "";
+  let total = 0;
+  lista.forEach((auto, idx) => {
+    const fila = tplFila.content.cloneNode(true);
+    fila.querySelector(".c-marca").textContent = auto.marca;
+    fila.querySelector(".c-modelo").textContent = auto.modelo;
+    fila.querySelector(".c-anio").textContent = auto.anio;
+    fila.querySelector(".c-categoria").textContent = auto.categoria;
+    fila.querySelector(".c-img").innerHTML = auto.imagen ? `<img src="${auto.imagen}" alt="${auto.marca}" style="width:80px;height:50px;object-fit:cover;border-radius:6px">` : "-";
+    fila.querySelector(".c-stock").textContent = auto.stock;
+    fila.querySelector(".c-precio").textContent = `$${auto.precio}`;
+    fila.querySelector(".c-costo").textContent = auto.costo ? `$${auto.costo}` : "-";
+    const margen = auto.costo ? (((auto.precio - auto.costo) / auto.costo) * 100).toFixed(1) : "-";
+    fila.querySelector(".c-margen").textContent = margen;
+    const valor = auto.stock * auto.precio;
+    fila.querySelector(".c-valor").textContent = `$${valor}`;
+    total += valor;
+    const acciones = document.createElement("div");
+    const btnE = document.createElement("button");
+    btnE.textContent = "✎";
+    btnE.className = "btn-accion btn-editar";
+    btnE.onclick = () => editarAuto(idx);
+    const btnX = document.createElement("button");
+    btnX.textContent = "🗑";
+    btnX.className = "btn-accion btn-eliminar";
+    btnX.onclick = () => confirmarEliminar(idx);
+    acciones.append(btnE, btnX);
+    fila.querySelector(".c-acciones").appendChild(acciones);
+    tablaInventario.appendChild(fila);
+  });
+  invTotal.textContent = `$${total}`;
+// === Actualizar estadísticas rápidas ===
+statTotalAutos.textContent = lista.length;
 
-#formInventario button {
-  grid-column: 1 / -1;
-  padding: 12px;
-  border-radius: 12px;
-  border: 0;
-  font-weight: 700;
-  cursor: pointer;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(229, 9, 20, 0.35);
-}
+// calcular stock total
+const totalStock = lista.reduce((acc,a)=> acc + a.stock, 0);
+statStock.textContent = totalStock;
 
-#btnCancelarEdicion {
-  background: #2a2b36;
-  color: #eee;
-  display: none;
-}
+// valor promedio por auto
+const promedio = lista.length ? (total / lista.length).toFixed(2) : 0;
+statPromedio.textContent = `$${promedio}`;
 
-/* Tabla inventario */
-#tablaInventario {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
-  border: 1px solid #2a2b36;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
+// valor total ya calculado
+statValorTotal.textContent = `$${total}`;
 
-#tablaInventario th, 
-#tablaInventario td {
-  padding: 10px 12px;
-  text-align: center;
-  border-bottom: 1px solid #2a2b36;
-  font-size: 14px;
-}
-
-#tablaInventario th {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-#tablaInventario td img {
-  width: 90px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
+// KPI: Marca más frecuente
+if (lista.length) {
+  const marcasCount = {};
+  lista.forEach(a => {
+    marcasCount[a.marca] = (marcasCount[a.marca] || 0) + 1;
+  });
+  const marcaTop = Object.entries(marcasCount).sort((a,b)=> b[1]-a[1])[0][0];
+  statMarcaFrecuente.textContent = marcaTop;
+} else {
+  statMarcaFrecuente.textContent = "-";
 }
 
-/* Acciones */
-.btn-accion {
-  border: 0;
-  border-radius: 8px;
-  padding: 6px 10px;
-  margin: 0 2px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.btn-editar {
-  background: #2d77ff;
-  color: #fff;
-}
-.btn-eliminar {
-  background: #e50914;
-  color: #fff;
+// KPI: Auto más caro
+if (lista.length) {
+  const autoCaro = lista.reduce((max,a)=> a.precio > max.precio ? a : max, lista[0]);
+  statAutoCaro.textContent = `${autoCaro.marca} ${autoCaro.modelo} ($${autoCaro.precio})`;
+} else {
+  statAutoCaro.textContent = "-";
 }
 
-/* Barra de búsqueda / filtros */
-.inventario-filtros {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
+// KPI: Mayor margen %
+let mejorMargen = null;
+lista.forEach(a=>{
+  if (a.costo && a.costo > 0) {
+    const margen = ((a.precio - a.costo) / a.costo) * 100;
+    if (!mejorMargen || margen > mejorMargen.margen) {
+      mejorMargen = { ...a, margen };
+    }
+  }
+});
+if (mejorMargen) {
+  statMayorMargen.textContent = `${mejorMargen.marca} ${mejorMargen.modelo} (${mejorMargen.margen.toFixed(1)}%)`;
+} else {
+  statMayorMargen.textContent = "-";
+}
+  localStorage.setItem("inventarioAutos", JSON.stringify(inventario));
 }
 
-.inventario-filtros input,
-.inventario-filtros select {
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid #2a2b36;
-  background: #111216;
-  color: #fff;
+
+formInventario.addEventListener("submit", e => {
+  e.preventDefault();
+  const nuevo = {
+    marca: document.getElementById("iMarca").value,
+    modelo: document.getElementById("iModelo").value,
+    anio: document.getElementById("iAnio").value,
+    categoria: document.getElementById("iCategoria").value,
+    stock: +document.getElementById("iStock").value,
+    precio: +document.getElementById("iPrecio").value,
+    costo: +document.getElementById("iCosto").value || null,
+    sku: document.getElementById("iSKU").value,
+    imagen: document.getElementById("iImagen").value
+  };
+  const idx = document.getElementById("iEditIndex").value;
+  if (idx) {
+    inventario[idx] = nuevo;
+    document.getElementById("iEditIndex").value = "";
+    btnCancelarEdicion.style.display = "none";
+  } else {
+    inventario.push(nuevo);
+  }
+  formInventario.reset();
+  renderInventario();
+});
+
+function editarAuto(idx) {
+  const auto = inventario[idx];
+  document.getElementById("iMarca").value = auto.marca;
+  document.getElementById("iModelo").value = auto.modelo;
+  document.getElementById("iAnio").value = auto.anio;
+  document.getElementById("iCategoria").value = auto.categoria;
+  document.getElementById("iStock").value = auto.stock;
+  document.getElementById("iPrecio").value = auto.precio;
+  document.getElementById("iCosto").value = auto.costo || "";
+  document.getElementById("iSKU").value = auto.sku || "";
+  document.getElementById("iImagen").value = auto.imagen || "";
+  document.getElementById("iEditIndex").value = idx;
+  btnCancelarEdicion.style.display = "inline-block";
 }
 
-.inventario-filtros button {
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 10px;
-  cursor: pointer;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 6px 18px rgba(229, 9, 20, 0.35);
+btnCancelarEdicion.addEventListener("click", ()=>{
+  formInventario.reset();
+  document.getElementById("iEditIndex").value = "";
+  btnCancelarEdicion.style.display = "none";
+});
+
+function confirmarEliminar(idx) {
+  dlgMsg.textContent = `¿Eliminar ${inventario[idx].marca} ${inventario[idx].modelo}?`;
+  dlgConfirmar.showModal();
+  dlgConfirmar.returnValue = "";
+  dlgConfirmar.onclose = ()=>{
+    if (dlgConfirmar.returnValue === "ok") {
+      inventario.splice(idx,1);
+      renderInventario();
+    }
+  };
+}
+// Aplicar Filtros
+function aplicarFiltros(){
+  const txt = (invBuscar.value || '').toLowerCase();
+  const cat = invFiltroCategoria.value;
+
+  const precioMinVal = document.getElementById('invPrecioMin').value;
+  const precioMaxVal = document.getElementById('invPrecioMax').value;
+  const anioMinVal = document.getElementById('invAnioMin').value;
+  const anioMaxVal = document.getElementById('invAnioMax').value;
+
+  const precioMin = precioMinVal ? parseFloat(precioMinVal) : null;
+  const precioMax = precioMaxVal ? parseFloat(precioMaxVal) : null;
+  const anioMin = anioMinVal ? parseInt(anioMinVal) : null;
+  const anioMax = anioMaxVal ? parseInt(anioMaxVal) : null;
+
+  const soloDisponibles = document.getElementById('invDisponibilidad').checked;
+
+  let lista = inventario.filter(a => {
+    // texto (marca o modelo)
+    const matchesTxt = !txt || (a.marca && a.marca.toLowerCase().includes(txt)) || (a.modelo && a.modelo.toLowerCase().includes(txt));
+    // categoria
+    const matchesCat = !cat || a.categoria === cat;
+    // precio
+    const precio = Number(a.precio) || 0;
+    const matchesPrecio = (precioMin === null || precio >= precioMin) && (precioMax === null || precio <= precioMax);
+    // año
+    const año = Number(a.anio) || 0;
+    const matchesAnio = (anioMin === null || año >= anioMin) && (anioMax === null || año <= anioMax);
+    // disponibilidad
+    const matchesDisp = !soloDisponibles || (Number(a.stock) > 0);
+
+    return matchesTxt && matchesCat && matchesPrecio && matchesAnio && matchesDisp;
+  });
+
+  // render con la lista filtrada
+  renderInventario(lista);
 }
 
-/* Diálogo confirmar */
-#dlgConfirmar {
-  background: var(--bg-2);
-  border: 1px solid #2a2b36;
-  border-radius: 14px;
-  padding: 20px;
-  color: var(--text);
-}
-#dlgConfirmar::backdrop {
-  background: rgba(0,0,0,.6);
-}
-#dlgConfirmar button {
-  margin: 0 8px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 0;
-  cursor: pointer;
-}
-#dlgConfirmar .btn-ok {
-  background: var(--accent);
-  color: #fff;
-}
-#dlgConfirmar .btn-cancel {
-  background: #2a2b36;
-  color: #fff;
-}
-/* ===== Filtros avanzados inventario ===== */
-.inventario-filtros{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-  justify-content:flex-start;
-  margin-top:10px;
-}
+invBuscar.addEventListener("input", aplicarFiltros);
+invFiltroCategoria.addEventListener("change", aplicarFiltros);
 
-.inventario-filtros input[type="number"]{
-  padding:8px 10px;
-  border-radius:10px;
-  border:1px solid #2a2b36;
-  background:#111216;
-  color:#fff;
-  min-width:120px;
-}
+ // Listeners para los filtros 
 
-.inventario-filtros label{
-  color:var(--muted);
-  font-size:14px;
-}
+['invPrecioMin','invPrecioMax','invAnioMin','invAnioMax'].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', aplicarFiltros);
+});
+const chkDisp = document.getElementById('invDisponibilidad');
+if (chkDisp) chkDisp.addEventListener('change', aplicarFiltros);
 
-.inventario-filtros .btn-primario{
-  padding:8px 12px;
-  height:40px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
+const btnLimpiar = document.getElementById('invLimpiarFiltros');
+if (btnLimpiar) btnLimpiar.addEventListener('click', ()=>{
+  document.getElementById('invPrecioMin').value = '';
+  document.getElementById('invPrecioMax').value = '';
+  document.getElementById('invAnioMin').value = '';
+  document.getElementById('invAnioMax').value = '';
+  document.getElementById('invDisponibilidad').checked = false;
+  invBuscar.value = '';
+  invFiltroCategoria.value = '';
+  aplicarFiltros();
+});
 
-/* Ajustes responsivos 1*/
-@media (max-width:720px){
-  .inventario-filtros{ justify-content:center; }
-  .inventario-filtros input[type="number"]{ min-width:120px; flex:1 1 45%; }
-}
+// Exportar / Importar
+document.getElementById("invExportar").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(inventario,null,2)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "inventario.json";
+  a.click();
+});
+document.getElementById("invImportar").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try {
+      inventario = JSON.parse(reader.result);
+      renderInventario();
+    } catch(e){ alert("Archivo inválido"); }
+  };
+  reader.readAsText(file);
+});
+document.getElementById("invVaciar").addEventListener("click", ()=>{
+  if (confirm("¿Vaciar inventario completo?")){
+    inventario = [];
+    renderInventario();
+  }
+});
 
-.stat-card{
-  background: var(--bg-2, #1b1c24);
-  padding: 12px;
-  border-radius: 12px;
-  min-width: 140px;
-  margin: 6px;
-  box-shadow: var(--shadow, 0 2px 6px rgba(0,0,0,0.5));
+// === Ordenamiento con íconos ===
+let ordenActual = { campo:null, asc:true };
+
+document.querySelectorAll("#tablaInventario th[data-sort]").forEach(th=>{
+  th.addEventListener("click", ()=>{
+    const campo = th.getAttribute("data-sort");
+
+    // alternar asc/desc si es el mismo campo
+    if (ordenActual.campo === campo) {
+      ordenActual.asc = !ordenActual.asc;
+    } else {
+      ordenActual.campo = campo;
+      ordenActual.asc = true;
+    }
+
+    inventario.sort((a,b)=>{
+      if (a[campo] > b[campo]) return ordenActual.asc ? 1 : -1;
+      if (a[campo] < b[campo]) return ordenActual.asc ? -1 : 1;
+      return 0;
+    });
+
+    // limpiar iconos previos
+    document.querySelectorAll("#tablaInventario th[data-sort]").forEach(el=>{
+      el.textContent = el.textContent.replace(/[\u25B2\u25BC]$/,'').trim();
+    });
+
+    // añadir icono al encabezado actual
+    th.textContent = th.textContent.replace(/[\u25B2\u25BC]$/,'').trim() + 
+                     (ordenActual.asc ? " ▲" : " ▼");
+
+    renderInventario();
+  });
+
+  // Doble click = reset
+  th.addEventListener("dblclick", ()=>{
+    ordenActual = { campo:null, asc:true };
+    renderInventario();
+
+    // limpiar iconos
+    document.querySelectorAll("#tablaInventario th[data-sort]").forEach(el=>{
+      el.textContent = el.textContent.replace(/[\u25B2\u25BC]$/,'').trim();
+    });
+  });
+});
+// === BOTÓN EXPORTAR CSV ===
+document.getElementById('invExportarCSV').addEventListener('click', () => {
+  if (inventario.length === 0) {
+    alert('No hay autos en el inventario.');
+    return;
+  }
+
+  const encabezados = [
+    "Marca","Modelo","Año","Categoría","Stock",
+    "Precio","Costo","Margen (%)","Valor Total","Imagen"
+  ];
+
+  const filas = inventario.map(auto => [
+    auto.marca,
+    auto.modelo,
+    auto.anio,
+    auto.categoria,
+    auto.stock,
+    `$${auto.precio}`,
+    `$${auto.costo || 0}`,
+    `${auto.margen}%`,
+    `$${(auto.precio * auto.stock).toFixed(2)}`,
+    auto.imagen || "N/A"
+  ]);
+
+  const csv = [encabezados, ...filas].map(row => row.join(",")).join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "inventario_autos.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// === SINCRONIZAR TABLA COMPARATIVA ===
+function actualizarTablaComparativa() {
+  const tbody = document.querySelector('#tablaOverlay tbody');
+  tbody.innerHTML = ''; // limpiar tabla previa
+
+  inventario.forEach(auto => {
+    const fila = document.createElement('tr');
+    fila.innerHTML = `
+      <td>${auto.marca}</td>
+      <td><img src="${auto.imagen || 'images/default.jpg'}" alt="${auto.modelo}" /></td>
+      <td>${auto.modelo}</td>
+      <td>${auto.anio}</td>
+      <td>${auto.categoria} - $${auto.precio}</td>
+    `;
+    tbody.appendChild(fila);
+  });
 }
-.stat-card h4{
-  margin:6px 0 0;
-  font-size:1.2em;
-  font-weight:800;
-  color: var(--accent, #ffce69);
-}
-.stat-card p{
-  margin:0;
-  font-size:0.85em;
-  color: var(--muted, #aaa);
-}
+// nuevo
 /* ===================================================
-   🎨 PANEL DE GESTIÓN INVENTARIO — REESTILIZADO
+   🆕 TABLA RESUMEN + BÚSQUEDA MEJORADA INVENTARIO
    =================================================== */
 
-/* Contenedor principal */
-#toolbarInventario {
-  background: var(--bg-2);
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  margin-bottom: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border: 1px solid #2a2b36;
+// 1) Crear tabla resumen al final del inventario si no existe
+function ensureTablaResumen() {
+  if (document.getElementById("tablaResumenInventario")) return;
+
+  const overlayBody = document.querySelector("#inventarioOverlay .overlay-body");
+  if (!overlayBody) return;
+
+  const section = document.createElement("section");
+  section.id = "tablaResumenInventario";
+  section.className = "formulario";
+  section.style.marginTop = "18px";
+  section.innerHTML = `
+    <h3>Resumen de Autos Añadidos</h3>
+    <div style="overflow:auto;border:1px solid #2a2b36;border-radius:14px">
+      <table class="tabla-autos">
+        <thead>
+          <tr>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Stock</th>
+            <th>Precio Unitario</th>
+            <th>Valor Total</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyResumenInventario"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="text-align:right;font-weight:700">Valor total del inventario:</td>
+            <td id="valorTotalResumen" style="font-weight:800">$0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  `;
+  overlayBody.appendChild(section);
 }
 
-/* Título */
-#toolbarInventario h3 {
-  color: var(--accent);
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: 0.5px;
+// 2) Actualizar tabla resumen
+function actualizarTablaResumen() {
+  ensureTablaResumen();
+  const tbody = document.getElementById("tbodyResumenInventario");
+  const totalEl = document.getElementById("valorTotalResumen");
+  tbody.innerHTML = "";
+
+  let total = 0;
+  inventario.forEach(auto => {
+    const valor = auto.precio * auto.stock;
+    total += valor;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${auto.marca}</td>
+      <td>${auto.modelo}</td>
+      <td>${auto.stock}</td>
+      <td>$${auto.precio}</td>
+      <td>$${valor}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  totalEl.textContent = `$${total}`;
 }
 
-/* Contenedor de filtros */
-.toolbar-container {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+// 3) Mejorar búsqueda en inventario (marca + modelo)
+const invBuscarInput = document.getElementById("invBuscar");
+if (invBuscarInput) {
+  invBuscarInput.addEventListener("input", () => {
+    const valor = invBuscarInput.value.trim().toLowerCase();
+    const filtrados = inventario.filter(auto => 
+      auto.marca.toLowerCase().includes(valor) ||
+      auto.modelo.toLowerCase().includes(valor)
+    );
+    renderInventario(filtrados);
+  });
 }
 
-/* Input búsqueda y select categoría */
-.input-busqueda,
-.select-categoria,
-.filtros-rapidos input {
-  background: #111216;
-  border: 1px solid #2a2b36;
-  padding: 10px 14px;
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 14px;
-  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.05);
-  transition: all 0.25s ease-in-out;
+// 4) Integrar resumen con renderInventario existente
+const oldRenderInventario = renderInventario;
+renderInventario = function(lista = inventario) {
+  oldRenderInventario(lista);
+  actualizarTablaResumen();
+};
+
+// Inicializar resumen al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+  actualizarTablaResumen();
+});
+// nuevo autos y tabla 
+/* ===================================================
+   🆕 SINCRONIZAR TABLA COMPARATIVA CON AUTOS AÑADIDOS
+   =================================================== */
+
+function actualizarTablaComparativaExtendida() {
+  const tabla = document.querySelector("#tablaOverlay tbody");
+  if (!tabla) return;
+
+  // 🔹 Primero, eliminar solo las filas dinámicas previas
+  tabla.querySelectorAll("tr.dinamico").forEach(tr => tr.remove());
+
+  if (inventario.length === 0) return;
+
+  // 🔹 Separador visual entre las filas fijas y los autos añadidos
+  const separador = document.createElement("tr");
+  separador.className = "dinamico";
+  separador.innerHTML = `
+    <td colspan="5" style="text-align:center;font-weight:bold;color:#ffce69;padding:8px 0">
+      — AUTOS AÑADIDOS AL INVENTARIO —
+    </td>
+  `;
+  tabla.appendChild(separador);
+
+  // 🔹 Añadir las nuevas filas dinámicamente
+  inventario.forEach(auto => {
+    const fila = document.createElement("tr");
+    fila.className = "dinamico";
+    fila.innerHTML = `
+      <td>${auto.marca}</td>
+      <td>
+        <img src="${auto.imagen || 'images/default.jpg'}"
+             alt="${auto.modelo}"
+             style="width:120px;height:80px;object-fit:cover;border-radius:6px">
+      </td>
+      <td>${auto.modelo}</td>
+      <td>${auto.anio}</td>
+      <td>${auto.categoria} — $${auto.precio}</td>
+    `;
+    tabla.appendChild(fila);
+  });
 }
 
-.input-busqueda:focus,
-.select-categoria:focus,
-.filtros-rapidos input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
-}
+// 🔹 Integramos la nueva función con tu renderInventario actual
+const oldRenderInventarioExtendido = renderInventario;
+renderInventario = function(lista = inventario) {
+  oldRenderInventarioExtendido(lista);
+  actualizarTablaResumen();              // actualiza la tabla resumen
+  actualizarTablaComparativaExtendida(); // actualiza la tabla comparativa extendida
+};
 
-/* Filtros rápidos */
-.filtros-rapidos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: flex-start;
-}
+// 🔹 Ejecutar sincronización al cargar
+document.addEventListener("DOMContentLoaded", () => {
+  actualizarTablaResumen();
+  actualizarTablaComparativaExtendida();
+});
 
-.chk-disponibilidad {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 14px;
-}
+/* ===================================================
+   🆕 IMPORTAR INVENTARIO DESDE CSV
+   =================================================== */
 
-/* Botonera principal */
-.acciones-inventario {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 8px;
-}
+const invImportarCSV = document.createElement("input");
+invImportarCSV.type = "file";
+invImportarCSV.accept = ".csv";
+invImportarCSV.style.display = "none";
+document.body.appendChild(invImportarCSV);
+btnImportarCSV.addEventListener("click", () => invImportarCSV.click());
 
-/* Botones base */
-.btn-primario,
-.btn-peligro {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
-  transition: all 0.25s ease-in-out;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
+invImportarCSV.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-/* Botones primarios */
-.btn-primario {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
-}
-.btn-primario:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 0 15px rgba(229, 9, 20, 0.6), 0 6px 18px rgba(229, 9, 20, 0.3);
-}
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const contenido = event.target.result;
+    const lineas = contenido.split(/\r?\n/).filter(l => l.trim() !== "");
+    if (lineas.length < 2) {
+      alert("El archivo CSV no contiene datos válidos.");
+      return;
+    }
 
-/* Botones de peligro */
-.btn-peligro {
-  background: #e50914;
-  color: #fff;
-}
-.btn-peligro:hover {
-  background: #ff3339;
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 77, 87, 0.6);
-}
+    // Obtener encabezados
+    const headers = lineas[0].split(",").map(h => h.trim().toLowerCase());
 
-/* Botones de importar con estilo diferenciado */
-.btn-importar {
-  background: #ffce69 !important;
-  color: #1c1c1c !important;
-  font-weight: 700;
-}
-.btn-importar:hover {
-  background: #ffc94d !important;
-  box-shadow: 0 0 12px rgba(255, 206, 105, 0.6);
-  transform: translateY(-2px) scale(1.05);
-}
+    // Campos esperados en CSV
+    const camposEsperados = ["marca","modelo","anio","categoria","stock","precio","costo","imagen"];
+    const faltanCampos = camposEsperados.filter(c => !headers.includes(c));
+    if (faltanCampos.length > 0) {
+      alert(`El CSV no contiene todos los campos requeridos.\nFaltan: ${faltanCampos.join(", ")}`);
+      return;
+    }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .filtros-rapidos {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .acciones-inventario {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .acciones-inventario button,
-  .acciones-inventario label {
-    width: 100%;
-    justify-content: center;
-  }
-}
-.overlay.open { display: flex !important; }
-.overlay .nota {
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 10px;
-}
-.overlay .nota a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 700;
-}
-.overlay .nota a:hover { text-decoration: underline; }
+    // Parsear filas
+    const nuevosAutos = [];
+    for (let i = 1; i < lineas.length; i++) {
+      const valores = lineas[i].split(",");
+      if (valores.length !== headers.length) continue;
+
+      const auto = {};
+      headers.forEach((h, idx) => {
+        const valor = valores[idx].trim();
+        if (["anio","stock","precio","costo"].includes(h)) {
+          auto[h] = valor ? parseFloat(valor) : 0;
+        } else {
+          auto[h] = valor;
+        }
+      });
+
+      // Validaciones mínimas
+      if (!auto.marca || !auto.modelo || !auto.precio) continue;
+
+      nuevosAutos.push(auto);
+    }
+
+    if (nuevosAutos.length === 0) {
+      alert("No se detectaron autos válidos en el CSV.");
+      return;
+    }
+
+    // Confirmar antes de importar
+    if (!confirm(`Se detectaron ${nuevosAutos.length} autos en el CSV.\n¿Quieres agregarlos al inventario?`)) return;
+
+    // Agregar autos y renderizar
+    inventario = [...inventario, ...nuevosAutos];
+    localStorage.setItem("inventarioAutos", JSON.stringify(inventario));
+    renderInventario();
+
+    alert(`Se importaron ${nuevosAutos.length} autos correctamente ✅`);
+  };
+
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+
 
