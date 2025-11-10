@@ -637,3 +637,17 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
     justify-content: center;
   }
 }
+.overlay.open { display: flex !important; }
+.overlay .nota {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 10px;
+}
+.overlay .nota a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+.overlay .nota a:hover { text-decoration: underline; }
+
