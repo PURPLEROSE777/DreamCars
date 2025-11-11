@@ -1,3 +1,14 @@
+// --- Conexión a Supabase (DreamCars) ---
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const supabaseUrl = 'https://afhjlxljgwmkdnltoeie.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaGpseGxqZ3dta2RubHRvZWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MjE1MzMsImV4cCI6MjA3ODI5NzUzM30.sTn0VsJC7sYGRZd7Yv5UfKMqs5s6-eRFDBJ0nf0J7Us'
+
+export const supabase = createClient(supabaseUrl, supabaseKey)
+
+console.log('✅ Conectado a Supabase:', supabaseUrl)
+
+
 // === NAVEGACIÓN: Botón "Inicio" ===
 const linkInicio = document.getElementById('linkInicio');
 linkInicio.addEventListener('click', (e) => {
