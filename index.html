@@ -151,20 +151,47 @@
     </div>
   </div>
 
-  <!-- OVERLAY AUTORES (sin cambios) -->
-  <div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
-    <div class="overlay-content autores">
-      <div class="overlay-head">
-        <h2>Desarrollado por</h2>
-        <button class="btn-cerrar" id="cerrarAutores" aria-label="Cerrar autores">✕</button>
-      </div>
+  <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
+<div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
+  <div class="overlay-content autores">
+    <div class="overlay-head">
+      <h2>Desarrollado por</h2>
+      <button class="btn-cerrar" id="cerrarAutores" aria-label="Cerrar autores">✕</button>
+    </div>
+
+    <!-- 🔹 Cuerpo del overlay con scroll interno -->
+    <div class="overlay-body" style="padding: 20px; overflow-y: auto; max-height: 75vh;">
+      <!-- 🧑‍💻 Lista de desarrolladores -->
       <ul class="lista-autores">
         <li>Alvarez Murcia Nicolas</li>
         <li>Davila Maldonado Julian</li>
         <li>Perez Pinilla Alan</li>
       </ul>
-    </div>
-  </div>
+
+      <!-- 🚗 Sección informativa del proyecto -->
+      <section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 10px;">
+        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Acerca del Proyecto — DreamCars</h3>
+
+        <p><strong>Misión:</strong> Ofrecer una experiencia interactiva que permita explorar, comparar y gestionar información sobre los autos más icónicos del mundo, combinando historia, diseño e innovación en un solo lugar digital.</p>
+
+        <p><strong>Visión:</strong> Convertirse en una plataforma educativa y visual reconocida por su presentación clara, estética moderna y utilidad para los apasionados del automovilismo y la tecnología.</p>
+
+        <p><strong>Introducción:</strong> DreamCars es un proyecto web diseñado para mostrar la evolución, características y legado de las marcas de autos más legendarias. Además, incluye herramientas de gestión y análisis de inventario, integrando la historia automotriz con una experiencia digital interactiva.</p>
+
+        <p><strong>Objetivo general:</strong> Desarrollar una aplicación web funcional e intuitiva que permita consultar, administrar y visualizar información detallada sobre autos y marcas de manera dinámica.</p>
+
+        <p><strong>Objetivos específicos:</strong></p>
+        <ul style="margin-left: 20px;">
+          <li>Implementar una interfaz moderna, adaptable y fácil de usar.</li>
+          <li>Integrar funciones de inventario con filtrado, búsqueda y exportación de datos.</li>
+          <li>Mostrar la historia y los íconos más representativos de cada marca.</li>
+          <li>Fomentar el interés por el automovilismo mediante la tecnología y el diseño web.</li>
+        </ul>
+      </section>
+    </div><!-- /.overlay-body -->
+  </div><!-- /.overlay-content -->
+</div><!-- /.overlay -->
+
 
   <!-- OVERLAY TABLA COMPARATIVA (sin cambios) -->
   <div class="overlay" id="tablaOverlay" aria-hidden="true" role="dialog">
