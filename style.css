@@ -858,5 +858,189 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
   background: #2f2f36 !important;         /* gris un poco más claro */
   transform: translateY(-2px);
 }
+/* ==========================================================
+   📱 RESPONSIVE DESIGN — DREAMCARS
+   Optimizado para móviles, tablets y pantallas pequeñas
+   ========================================================== */
+
+/* 🌐 Ajuste general de fuentes y espaciado */
+@media (max-width: 1024px) {
+  body {
+    font-size: 15px;
+    padding: 0 10px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav a {
+    padding: 6px 10px;
+    font-size: 0.95rem;
+  }
+
+  .intro .titulo {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .intro .subtitulo {
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  .formulario {
+    padding: 12px;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario button {
+    width: 100%;
+    max-width: none;
+    margin: 4px 0;
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .grid-cards,
+  .grid-galeria {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* 📱 Teléfonos (hasta 768px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .header {
+    padding: 12px;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav a {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #2a2a2a;
+  }
+
+  .marcas article.card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .card-img img {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .overlay-content {
+    width: 95%;
+    height: 90%;
+    overflow-y: auto;
+  }
+
+  .overlay-body {
+    padding: 10px;
+  }
+
+  /* Tablas en scroll horizontal */
+  table.tabla-autos {
+    font-size: 13px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Footer en columna */
+  .footer-contenido {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .footer-botones {
+    text-align: center;
+  }
+
+  .btn-primario {
+    width: 100%;
+  }
+
+  /* Formularios dentro de overlays */
+  #formInventario .form-row {
+    flex-direction: column;
+  }
+
+  #formInventario input,
+  #formInventario select,
+  #formInventario button {
+    width: 100%;
+  }
+
+  /* Panel de estadísticas */
+  #invStats .form-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-card {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+/* 📲 Teléfonos pequeños (hasta 480px) */
+@media (max-width: 480px) {
+  .brand {
+    font-size: 1.3rem;
+  }
+
+  .titulo {
+    font-size: 1.6rem;
+  }
+
+  .subtitulo {
+    font-size: 0.9rem;
+  }
+
+  .grid-galeria {
+    grid-template-columns: 1fr;
+  }
+
+  .overlay-content {
+    padding: 8px;
+    border-radius: 10px;
+  }
+
+  .btn-cerrar {
+    font-size: 1rem;
+  }
+
+  .footer-texto {
+    font-size: 0.85rem;
+  }
+}
+
 
 
