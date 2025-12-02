@@ -66,12 +66,20 @@
   <!-- Aquí el JS insertará las tarjetas -->
 </section>
   <!-- Terminan Descripciones principales -->
-    
-<!-- Conectamos el partado galeria con SUPABASE-->
-  <div class="grid-galeria" id="galeriaContainer">
-  <!-- JS insertará las imágenes desde Supabase -->
+<<!-- OVERLAY GALERIA -->
+<div class="overlay" id="galeriaOverlay" aria-hidden="true" role="dialog">
+  <div class="overlay-content">
+    <div class="overlay-head">
+      <h2>Galería de Coches</h2>
+      <button class="btn-cerrar" id="cerrarGaleria">✕</button>
+    </div>
+    <div class="overlay-body">
+      <div class="grid-galeria" id="galeriaOverlayContainer">
+        <!-- Aquí tu JS inyectará las imágenes -->
+      </div>
+    </div>
+  </div>
 </div>
-
   <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
 <div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
   <div class="overlay-content autores">
@@ -403,6 +411,7 @@
     <script type="module" src="js/galeriaSupabase.js"></script>
 </body>
 </html>
+
 
 
 
