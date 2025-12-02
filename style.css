@@ -56,15 +56,14 @@ body{
 .titulo{ margin:0 0 6px; font-size:40px; letter-spacing:.3px; }
 .subtitulo{ margin:0; color:var(--muted); }
 
-/* === CARDS DE MARCAS — OPTIMIZADO PARA SUPABASE === */
+/* === CARDS DE MARCAS RESPONSIVAS === */
 .marcas {
   margin-top: 36px;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 24px;
 }
 
-/* Card individual */
 .card {
   display: grid;
   grid-template-columns: 1.1fr .9fr;
@@ -76,7 +75,7 @@ body{
   padding: 22px;
   transform: translateY(12px);
   opacity: 0;
-  transition: transform 0.6s ease, opacity 0.6s ease;
+  transition: 0.6s ease;
 }
 
 .card.revealed {
@@ -88,7 +87,6 @@ body{
   outline: 1px solid #2c2d3a;
 }
 
-/* Título y párrafo dentro de la card */
 .card h2 {
   margin: 0 0 8px;
   color: var(--accent);
@@ -101,7 +99,6 @@ body{
   line-height: 1.55;
 }
 
-/* Contenedor de imagen */
 .card-img {
   display: flex;
   align-items: center;
@@ -109,22 +106,19 @@ body{
   overflow: hidden;
   border-radius: 16px;
   background: #101014;
-  align-self: stretch;
 }
 
-/* Imagen dentro de la card */
 .card-img img {
-  max-width: 100%;      /* no se salga del contenedor */
-  max-height: 100%;     /* respeta proporciones */
-  object-fit: contain;  /* ajusta la imagen completa sin cortar */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   display: block;
   border-radius: 12px;
   transition: transform 0.4s ease;
 }
 
-/* Hover sobre la card */
 .card:hover .card-img img {
-  transform: scale(1.05); /* ligero zoom */
+  transform: scale(1.05);
 }
 
 /* === FORMULARIO GENERAL (contacto o sugerencias) === */
@@ -1108,6 +1102,7 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
   background-color: #ff1a1a;
   transform: scale(1.05);
 }
+
 
 
 
