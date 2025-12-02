@@ -385,8 +385,60 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
  <script type="module" src="js/script.js"></script>
     <script type="module" src="js/cargarMarcas.js"></script>
+    <!-- LOGIN OVERLAY (COPIA DE TU LOGIN PERO INTEGRADO) -->
+<div id="loginOverlay" style="
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+">
+  
+<div class="auth-card" style="max-width:420px; width:90%; background:#15161a; padding:32px; border-radius:14px;">
+    
+    <div class="brand-row">
+      <img src="tu_logo.png" class="logo">
+      <h1>Autos Premium</h1>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="tabLogin">Iniciar Sesión</button>
+      <button class="tab" id="tabRegister">Registrarse</button>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- LOGIN -->
+    <div id="login-layout">
+      <div class="form">
+        <input id="login-email" type="email" placeholder="Email">
+        <input id="login-pass" type="password" placeholder="Contraseña">
+
+        <button class="btn primary" id="btnDoLogin">Entrar</button>
+      </div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="register-layout" style="display:none;">
+      <div class="form">
+        <input id="reg-name" type="text" placeholder="Nombre completo">
+        <input id="reg-email" type="email" placeholder="Email">
+        <input id="reg-pass" type="password" placeholder="Contraseña">
+
+        <button class="btn primary" id="btnDoRegister">Crear cuenta</button>
+      </div>
+    </div>
+
+</div>
+</div>
+
 </body>
 </html>
+
 
 
 
