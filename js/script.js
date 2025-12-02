@@ -765,6 +765,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+//Boton cerrar sesion.
+const btnLogout = document.getElementById('btnLogout');
+
+if (btnLogout) {
+  btnLogout.addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error cerrando sesión:", error);
+      return;
+    }
+
+    // Limpia el localStorage si lo usas
+    localStorage.removeItem("usuarioActivo");
+
+    // Redirige al login
+    window.location.href = "/login.html";
+  });
+} else {
+  console.warn("btnLogout no existe en el DOM");
+}
 
 
 // ============================
@@ -800,6 +820,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
