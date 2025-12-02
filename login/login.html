@@ -400,15 +400,19 @@ function registerUser(){
 }
 
   <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-export const supabase = createClient(
-  "TU_URL_SUPABASE",
-  "TU_API_PUBLIC_ANON"
-);
-</script>
+  const supabaseUrl = "https://afhjlxljgwmkdnltoeie.supabase.co";
+  const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaGpseGxqZ3dta2RubHRvZWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MjE1MzMsImV4cCI6MjA3ODI5NzUzM30.sTn0VsJC7sYGRZd7Yv5UfKMqs5s6-eRFDBJ0nf0J7Us";
+
+  // 🌐 Inicializamos Supabase
+  export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  console.log("✓ Supabase conectado correctamente.");
+</script> 
 
 </script>
 </body>
 </html>
+
 
