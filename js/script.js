@@ -745,6 +745,29 @@ async function verificarRol() {
 
 // Ejecutar al cargar la página
 verificarRol();
+// Elementos del header
+const userInfo = document.getElementById("userInfo");
+const userName = document.getElementById("userName");
+const btnLogout = document.getElementById("btnLogout");
+const btnLogin = document.querySelector(".btn-login");
+
+// Revisar si hay sesión activa al cargar la página
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    userInfo.style.display = "flex";
+    userName.textContent = session.user.user_metadata.full_name || session.user.email;
+    btnLogin.style.display = "none";
+  }
+});
+
+// Logout
+btnLogout.addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  userInfo.style.display = "none";
+  btnLogin.style.display = "block";
+  alert("Has cerrado sesión.");
+});
+
 
 
 
