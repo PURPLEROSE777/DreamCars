@@ -56,69 +56,106 @@ body{
 .titulo{ margin:0 0 6px; font-size:40px; letter-spacing:.3px; }
 .subtitulo{ margin:0; color:var(--muted); }
 
+/* =====================================================
+   CONTENEDOR PRINCIPAL DE MARCAS
+   Se usa grid adaptable para que las cards se acomoden
+   automáticamente según el ancho de la pantalla.
+   ===================================================== */
 .marcas {
-  margin-top: 36px;
+  margin-top: 36px; /* separación superior */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* columnas adaptables */
+  gap: 24px; /* espacio entre cards */
 }
 
+/* =====================================================
+   CARD INDIVIDUAL
+   Cada marca se muestra como una card con información
+   y su imagen. Uso de grid interno para texto + imagen.
+   ===================================================== */
 .card {
   display: grid;
-  grid-template-columns: 1.1fr .9fr;
+  grid-template-columns: 1.1fr 0.9fr; /* texto e imagen */
   gap: 20px;
   background: var(--card);
   border: 1px solid #242531;
   border-radius: 20px;
   box-shadow: var(--shadow);
   padding: 22px;
-  transform: translateY(12px);
-  opacity: 0;
-  transition: 0.6s ease;
+  transform: translateY(12px); /* animación de aparición */
+  opacity: 0; /* inicio invisible para animación */
+  transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
+/* =====================================================
+   CARD REVEAL
+   Se activa cuando la card se carga o entra en viewport
+   ===================================================== */
 .card.reveal {
   transform: none;
   opacity: 1;
 }
 
+/* =====================================================
+   EFECTO HOVER GENERAL
+   Agrega un borde sutil al pasar el mouse sobre la card
+   ===================================================== */
 .card:hover {
   outline: 1px solid #2c2d3a;
 }
 
+/* =====================================================
+   TÍTULO DE LA CARD
+   ===================================================== */
 .card h2 {
   margin: 0 0 8px;
   color: var(--accent);
   font-size: 26px;
 }
 
+/* =====================================================
+   DESCRIPCIÓN Y TEXTO DE LA CARD
+   ===================================================== */
 .card p {
   margin: 0 0 10px;
   color: #ddd;
   line-height: 1.55;
 }
 
+/* =====================================================
+   CONTENEDOR DE IMAGEN
+   Flex para centrar imagen y recortar si es necesario
+   ===================================================== */
 .card-img {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: hidden; /* evita que la imagen sobresalga */
   border-radius: 16px;
   background: #101014;
 }
 
+/* =====================================================
+   IMAGEN DE LA CARD
+   Ajusta el tamaño sin deformar y con transición suave
+   ===================================================== */
 .card-img img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;
+  object-fit: contain; /* mantiene proporciones */
   display: block;
   border-radius: 12px;
   transition: transform 0.4s ease;
 }
 
+/* =====================================================
+   EFECTO HOVER DE IMAGEN
+   Ligeramente aumenta la imagen al pasar el mouse
+   ===================================================== */
 .card:hover .card-img img {
   transform: scale(1.05);
 }
+
 
 /* === FORMULARIO GENERAL (contacto o sugerencias) === */
 .formulario{
@@ -1101,6 +1138,7 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
   background-color: #ff1a1a;
   transform: scale(1.05);
 }
+
 
 
 
