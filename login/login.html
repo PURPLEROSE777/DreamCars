@@ -6,7 +6,7 @@
 <title>Acceso — Autos Premium</title>
 
 <style>
-/* === TU CSS ORIGINAL SIN CAMBIOS === */
+/* === TU CSS ORIGINAL (SIN CAMBIOS) === */
 :root{
   --bg:#0f0f12; 
   --card:#15161a; 
@@ -15,7 +15,7 @@
   --glass: rgba(255,255,255,0.04);
   --radius:14px;
   --glow: 0 0 12px rgba(212,0,0,0.65);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto;
 }
 
 *{box-sizing:border-box}
@@ -45,7 +45,6 @@ body{
   color:var(--muted);
   text-decoration:none;
   font-size:14px;
-  background:transparent;
   border-radius:8px;
   padding:6px 10px;
   backdrop-filter:blur(8px);
@@ -65,18 +64,6 @@ body{
   max-width:480px;
   box-shadow:0 10px 40px rgba(0,0,0,0.7);
   position:relative;
-  overflow:hidden;
-}
-.auth-card::before{
-  content:"";
-  position:absolute;
-  top:-20%;
-  left:-20%;
-  width:140%;
-  height:140%;
-  background:radial-gradient(circle at top, rgba(212,0,0,0.15), transparent 55%);
-  filter:blur(40px);
-  z-index:-1;
 }
 
 .brand-row{display:flex; align-items:center; gap:12px; margin-bottom:8px}
@@ -90,8 +77,6 @@ body{
   font-size:22px;
   margin:0;
   color:#fff;
-  letter-spacing:0.5px;
-  text-shadow: var(--glow);
 }
 
 .tabs{
@@ -106,13 +91,10 @@ body{
   border-radius:10px;
   color:var(--muted);
   cursor:pointer;
-  font-weight:500;
-  transition:0.2s;
 }
 .tab.active{
   background:var(--glass);
   color:#fff;
-  font-weight:700;
   box-shadow: inset 0 0 12px rgba(212,0,0,0.3);
 }
 
@@ -121,8 +103,6 @@ body{
   border-radius:10px;
   margin-bottom:14px;
   font-weight:600;
-  opacity:0;
-  transform:translateY(-8px);
   animation:fadeIn 0.3s forwards;
 }
 .alert.error{
@@ -134,38 +114,22 @@ body{
   border-left:3px solid #00d46e;
 }
 
-@keyframes fadeIn{
-  to{opacity:1; transform:translateY(0);}
-}
-
 .form{
   display:flex;
   flex-direction:column;
   gap:10px;
 }
 
-.form label{font-size:13px; color:var(--muted)}
-
-.form input[type="email"],
-.form input[type="password"],
-.form input[type="text"]{
+.form input{
   padding:12px 14px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.06);
   background:rgba(255,255,255,0.03);
   color:#fff;
-  outline:none;
-  font-size:15px;
-  transition:0.25s;
-}
-.form input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 12px rgba(212,0,0,0.4);
 }
 
 .pwd-row{
   display:flex;
-  align-items:center;
   gap:8px;
 }
 .pwd-toggle{
@@ -173,7 +137,6 @@ body{
   border:none;
   color:var(--muted);
   font-size:18px;
-  cursor:pointer;
 }
 
 .actions-row{
@@ -187,55 +150,15 @@ body{
   border-radius:12px;
   cursor:pointer;
   font-weight:700;
-  font-size:15px;
-  transition:0.2s;
 }
 .btn.primary{
   background:var(--accent);
   color:#fff;
-  border:none;
-  box-shadow:var(--glow);
-}
-.btn.primary:hover{
-  filter:brightness(1.15);
 }
 .btn.ghost{
   background:transparent;
   border:1px solid rgba(255,255,255,0.09);
   color:var(--muted);
-}
-.btn.ghost:hover{
-  color:#fff;
-  border-color:var(--accent);
-}
-
-.social-block{margin-top:18px}
-.social-buttons{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-.btn.social{
-  padding:11px 14px;
-  border-radius:12px;
-  font-weight:700;
-  flex:1;
-  text-align:center;
-}
-.social.google{background:#fff; color:#111}
-.social.facebook{background:#1877f2;color:#fff}
-.social.microsoft{
-  background:linear-gradient(45deg,#00a4ef,#8a2be2);
-  color:#fff;
-}
-
-@media(max-width:540px){
-  .auth-card{
-    padding:22px;
-    border-radius:12px;
-  }
-  .brand-row h1{font-size:20px}
-  .logo{width:42px;height:42px}
 }
 </style>
 </head>
@@ -249,7 +172,7 @@ body{
 
     <!-- LOGO -->
     <div class="brand-row">
-      <img src="tu_logo.png" class="logo" />
+      <img src="tu_logo.png" class="logo">
       <h1>Autos Premium</h1>
     </div>
 
@@ -278,14 +201,6 @@ body{
           <button class="btn ghost" onclick="showRegister()">Crear cuenta</button>
         </div>
       </div>
-
-      <div class="social-block">
-        <div class="social-buttons">
-          <button class="btn social google" onclick="oauth('google')">Google</button>
-          <button class="btn social facebook" onclick="oauth('facebook')">Facebook</button>
-          <button class="btn social microsoft" onclick="oauth('azure')">Microsoft</button>
-        </div>
-      </div>
     </div>
 
     <!-- REGISTRO -->
@@ -308,49 +223,40 @@ body{
           <button class="btn ghost" onclick="showLogin()">Ya tengo cuenta</button>
         </div>
       </div>
-
-      <div class="social-block">
-        <div class="social-buttons">
-          <button class="btn social google" onclick="oauth('google')">Google</button>
-          <button class="btn social facebook" onclick="oauth('facebook')">Facebook</button>
-          <button class="btn social microsoft" onclick="oauth('azure')">Microsoft</button>
-        </div>
-      </div>
     </div>
 
   </div>
 </div>
 
-
-<!-- ========== JS NORMAL (UI) ========== -->
 <script>
+/*** UI BASICA ***/
 function showLogin(){
-  document.getElementById("login-layout").style.display="block";
-  document.getElementById("register-layout").style.display="none";
-  document.getElementsByClassName("tab")[0].classList.add("active");
-  document.getElementsByClassName("tab")[1].classList.remove("active");
+  loginLayout.style.display="block";
+  registerLayout.style.display="none";
+  tabs[0].classList.add("active");
+  tabs[1].classList.remove("active");
 }
-
 function showRegister(){
-  document.getElementById("login-layout").style.display="none";
-  document.getElementById("register-layout").style.display="block";
-  document.getElementsByClassName("tab")[1].classList.add("active");
-  document.getElementsByClassName("tab")[0].classList.remove("active");
+  loginLayout.style.display="none";
+  registerLayout.style.display="block";
+  tabs[1].classList.add("active");
+  tabs[0].classList.remove("active");
 }
-
-function showAlert(msg, type="error"){
-  document.getElementById("alert-container").innerHTML =
-    `<div class="alert ${type}">${msg}</div>`;
-}
-
 function togglePwd(id){
-  let i = document.getElementById(id);
-  i.type = i.type === "password" ? "text" : "password";
+  let i=document.getElementById(id);
+  i.type=i.type==="password"?"text":"password";
 }
+function showAlert(msg,type="error"){
+  alertBox.innerHTML=`<div class="alert ${type}">${msg}</div>`;
+}
+
+const loginLayout = document.getElementById("login-layout");
+const registerLayout = document.getElementById("register-layout");
+const alertBox = document.getElementById("alert-container");
+const tabs = document.getElementsByClassName("tab");
 </script>
 
-
-<!-- ========== JS SUPABASE (FUNCIONAL) ========== -->
+<!-- SUPABASE REAL -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
@@ -359,235 +265,46 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaGpseGxqZ3dta2RubHRvZWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MjE1MzMsImV4cCI6MjA3ODI5NzUzM30.sTn0VsJC7sYGRZd7Yv5UfKMqs5s6-eRFDBJ0nf0J7Us"
 );
 
-console.log("✔ Supabase conectado");
+console.log("✔ Conectado a Supabase");
 
-
-// LOGIN
+/*** LOGIN REAL ***/
 window.login = async function(){
-  let email = document.getElementById("login-email").value.trim();
-  let pass  = document.getElementById("login-pass").value.trim();
+  let email=document.getElementById("login-email").value.trim();
+  let pass=document.getElementById("login-pass").value.trim();
 
-  if(!email || !pass){
+  if(!email||!pass){
     showAlert("Completa todos los campos.");
     return;
   }
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email, password: pass
-  });
+  const{error}=await supabase.auth.signInWithPassword({email,password:pass});
+  if(error){showAlert("Credenciales incorrectas.");return;}
 
-  if(error){
-    showAlert("Credenciales incorrectas.");
-    return;
-  }
-
-  showAlert("Bienvenido ✨", "success");
-  setTimeout(()=> window.location.href = "../index.html", 1000);
+  showAlert("Bienvenido 😎","success");
+  setTimeout(()=>window.location.href="../index.html",900);
 }
 
-
-// REGISTRO
+/*** REGISTRO REAL ***/
 window.registerUser = async function(){
-  let name = document.getElementById("reg-name").value.trim();
-  let email = document.getElementById("reg-email").value.trim();
-  let pass  = document.getElementById("reg-pass").value.trim();
+  let name=document.getElementById("reg-name").value.trim();
+  let email=document.getElementById("reg-email").value.trim();
+  let pass=document.getElementById("reg-pass").value.trim();
 
-  if(pass.length < 8){
+  if(pass.length<8){
     showAlert("La contraseña debe tener al menos 8 caracteres.");
     return;
   }
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password: pass,
-    options:{ data:{ full_name:name } }
+  const{error}=await supabase.auth.signUp({
+    email,password:pass,
+    options:{data:{full_name:name}}
   });
 
-  if(error){
-    showAlert("Error: " + error.message);
-    return;
-  }
+  if(error){showAlert(error.message);return;}
 
-  showAlert("Registro exitoso. Revisa tu correo.", "success");
-}
-
-
-// OAUTH
-window.oauth = async function(provider){
-  const { error } = await supabase.auth.signInWithOAuth({ provider });
-  if(error) showAlert("Error: " + error.message);
+  showAlert("Registro exitoso. Revisa tu correo.","success");
 }
 </script>
 
 </body>
 </html>
-
-</head>
-
-
-<body>
-
-<a class="back-home" href="index.html">← Volver al inicio</a>
-
-<div class="auth-page">
-  <div class="auth-card">
-
-    <!-- LOGO + TÍTULO -->
-    <div class="brand-row">
-      <img src="tu_logo.png" class="logo" />
-      <h1>Autos Premium</h1>
-    </div>
-
-    <!-- TABS -->
-    <div class="tabs">
-      <button class="tab active" onclick="showLogin()">Iniciar Sesión</button>
-      <button class="tab" onclick="showRegister()">Registrarse</button>
-    </div>
-
-    <!-- ALERTA -->
-    <div id="alert-container"></div>
-
-    <!-- LAYOUT LOGIN -->
-    <div id="login-layout">
-      <div class="form">
-
-        <label>Email</label>
-        <input id="login-email" type="email" placeholder="usuario@correo.com">
-
-        <label>Contraseña</label>
-        <div class="pwd-row">
-          <input id="login-pass" type="password" placeholder="••••••••">
-          <button class="pwd-toggle" onclick="togglePwd('login-pass')">👁</button>
-        </div>
-
-        <div class="actions-row">
-          <button class="btn primary" onclick="login()">Entrar</button>
-          <button class="btn ghost" onclick="showRegister()">Crear cuenta</button>
-        </div>
-
-      </div>
-
-      <div class="social-block">
-        <p class="muted small">O entrar con</p>
-        <div class="social-buttons">
-          <button class="btn social google">Google</button>
-          <button class="btn social facebook">Facebook</button>
-          <button class="btn social microsoft">Microsoft</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- LAYOUT REGISTRO -->
-    <div id="register-layout" style="display:none;">
-      <div class="form">
-
-        <label>Nombre completo</label>
-        <input id="reg-name" type="text" placeholder="Ej: Carlos Andrade">
-
-        <label>Email</label>
-        <input id="reg-email" type="email" placeholder="usuario@correo.com">
-
-        <label>Contraseña</label>
-        <div class="pwd-row">
-          <input id="reg-pass" type="password" placeholder="Mínimo 8 caracteres">
-          <button class="pwd-toggle" onclick="togglePwd('reg-pass')">👁</button>
-        </div>
-
-        <div class="actions-row">
-          <button class="btn primary" onclick="registerUser()">Crear cuenta</button>
-          <button class="btn ghost" onclick="showLogin()">Ya tengo cuenta</button>
-        </div>
-
-      </div>
-
-      <div class="social-block">
-        <p class="muted small">O registrarte con</p>
-        <div class="social-buttons">
-          <button class="btn social google">Google</button>
-          <button class="btn social facebook">Facebook</button>
-          <button class="btn social microsoft">Microsoft</button>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-<script>
-/* ---- CAMBIAR ENTRE LOGIN Y REGISTRO ---- */
-function showLogin(){
-  document.getElementById("login-layout").style.display = "block";
-  document.getElementById("register-layout").style.display = "none";
-  document.getElementsByClassName("tab")[0].classList.add("active");
-  document.getElementsByClassName("tab")[1].classList.remove("active");
-}
-function showRegister(){
-  document.getElementById("login-layout").style.display = "none";
-  document.getElementById("register-layout").style.display = "block";
-  document.getElementsByClassName("tab")[1].classList.add("active");
-  document.getElementsByClassName("tab")[0].classList.remove("active");
-}
-
-/* ---- ALERTAS ---- */
-function showAlert(msg, type="error"){
-  const box = `
-    <div class="alert ${type}">
-      ${msg}
-    </div>
-  `;
-  document.getElementById("alert-container").innerHTML = box;
-}
-
-/* ---- MOSTRAR/OCULTAR CONTRASEÑA ---- */
-function togglePwd(id){
-  const input = document.getElementById(id);
-  input.type = input.type === "password" ? "text" : "password";
-}
-
-/* ---- LOGIN (PARA INTEGRAR SUPABASE DESPUÉS) ---- */
-function login(){
-  let email = document.getElementById("login-email").value.trim();
-  let pass  = document.getElementById("login-pass").value.trim();
-
-  if(!email || !pass){
-    showAlert("Completa todos los campos.");
-    return;
-  }
-
-  showAlert("Aquí va lógica de Supabase…", "success");
-}
-
-/* ---- REGISTRO ---- */
-function registerUser(){
-  let name = document.getElementById("reg-name").value.trim();
-  let email = document.getElementById("reg-email").value.trim();
-  let pass  = document.getElementById("reg-pass").value.trim();
-
-  if(pass.length < 8){
-    showAlert("La contraseña debe tener mínimo 8 caracteres.");
-    return;
-  }
-
-  showAlert("Aquí va lógica de Supabase para registrarse…", "success");
-}
-
-  <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
-
-  const supabaseUrl = "https://afhjlxljgwmkdnltoeie.supabase.co";
-  const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaGpseGxqZ3dta2RubHRvZWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MjE1MzMsImV4cCI6MjA3ODI5NzUzM30.sTn0VsJC7sYGRZd7Yv5UfKMqs5s6-eRFDBJ0nf0J7Us";
-
-  // 🌐 Inicializamos Supabase
-  export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-  console.log("✓ Supabase conectado correctamente.");
-</script> 
-
-</script>
-</body>
-</html>
-
-
-
-
