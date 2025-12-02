@@ -1043,4 +1043,23 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
 }
 
 
+.btn-login {
+  background-color: #d40000;   /* Rojo */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: 0.2s;
+}
+
+.btn-login:hover {
+  background-color: #ff1a1a;
+  transform: scale(1.05);
+}
+
+
+
 
