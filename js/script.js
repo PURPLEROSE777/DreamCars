@@ -718,33 +718,36 @@ document.addEventListener("DOMContentLoaded", () => {
 // ============================
 // 🔥 CONTROL DE ROLES
 // ============================
-async function verificarRol() {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // Esperar a que exista el link
+  const linkInventario = document.getElementById("linkInventario");
+  if (!linkInventario) return; // Evita errores si no existe en alguna página
+
   const {
     data: { user }
   } = await supabase.auth.getUser();
 
   // Si no hay usuario → Oculta inventario
   if (!user) {
-    document.getElementById("linkInventario").style.display = "none";
+    linkInventario.style.display = "none";
     return;
   }
-// si es un administrador muestra layoutu inventario
-  
-const { data: perfil } = await supabase
-  .from("profiles")
-  .select("role")
-  .eq("id", user.id)
-  .maybeSingle();
 
-if (perfil?.role === "admin") {
-  document.getElementById("linkInventario").style.display = "inline-block";
-} else {
-  document.getElementById("linkInventario").style.display = "none";
-}
+  // Buscar rol del usuario
+  const { data: perfil } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
 
+  if (perfil?.role === "admin") {
+    linkInventario.style.display = "inline-block";
+  } else {
+    linkInventario.style.display = "none";
+  }
 
-// Ejecutar al cargar la página
-verificarRol();
+});
 
 // ============================
 // 🔥 CONTROL DE SESIÓN Y LOGOUT DINÁMICO (VERSIÓN SEGURA)
@@ -803,4 +806,5 @@ if (userInfo && userName && btnLogout && btnLogin) { // ← solo ejecutar si exi
   });
 
 }
+
 
