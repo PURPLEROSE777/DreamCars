@@ -58,38 +58,40 @@ body{
 
 /* =====================================================
    CONTENEDOR PRINCIPAL DE MARCAS
-   Se usa grid adaptable para que las cards se acomoden
-   automáticamente según el ancho de la pantalla.
+   Scroll vertical tipo feed, cada card ocupa todo el ancho
    ===================================================== */
 .marcas {
-  margin-top: 36px; /* separación superior */
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* columnas adaptables */
-  gap: 24px; /* espacio entre cards */
+  margin-top: 36px;           /* separación superior */
+  display: flex;              /* layout vertical */
+  flex-direction: column;     /* cada card debajo de la otra */
+  gap: 32px;                  /* espacio entre cards */
+  width: 100%;
+  padding-bottom: 36px;       /* espacio al final para scroll */
+  max-width: 1000px;          /* ancho máximo centrado */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* =====================================================
    CARD INDIVIDUAL
-   Cada marca se muestra como una card con información
-   y su imagen. Uso de grid interno para texto + imagen.
+   Diseño moderno tipo feed: sombra profunda, bordes grandes
    ===================================================== */
 .card {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr; /* texto e imagen */
-  gap: 20px;
+  grid-template-columns: 1.3fr 1fr; /* texto a la izquierda, imagen a la derecha */
+  gap: 24px;
   background: var(--card);
-  border: 1px solid #242531;
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  padding: 22px;
-  transform: translateY(12px); /* animación de aparición */
-  opacity: 0; /* inicio invisible para animación */
-  transition: transform 0.6s ease, opacity 0.6s ease;
+  border-radius: 28px;           /* bordes grandes y suaves */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5); /* sombra profunda */
+  padding: 28px;
+  transform: translateY(24px);    /* animación inicial: abajo */
+  opacity: 0;                     /* invisible al inicio */
+  transition: transform 0.7s ease, opacity 0.7s ease, box-shadow 0.3s ease;
 }
 
 /* =====================================================
-   CARD REVEAL
-   Se activa cuando la card se carga o entra en viewport
+   ANIMACIÓN AL APARECER
+   Cuando la card entra en viewport (reveal)
    ===================================================== */
 .card.reveal {
   transform: none;
@@ -97,63 +99,80 @@ body{
 }
 
 /* =====================================================
-   EFECTO HOVER GENERAL
-   Agrega un borde sutil al pasar el mouse sobre la card
+   HOVER MODERNO
+   Sombra más fuerte y ligero zoom de imagen
    ===================================================== */
 .card:hover {
-  outline: 1px solid #2c2d3a;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6); /* sombra más marcada */
+  outline: none;
 }
 
 /* =====================================================
    TÍTULO DE LA CARD
    ===================================================== */
 .card h2 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--accent);
-  font-size: 26px;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 /* =====================================================
    DESCRIPCIÓN Y TEXTO DE LA CARD
    ===================================================== */
 .card p {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: #ddd;
-  line-height: 1.55;
+  line-height: 1.6;
+  font-size: 16px;
 }
 
 /* =====================================================
    CONTENEDOR DE IMAGEN
-   Flex para centrar imagen y recortar si es necesario
+   Centrado y recorte elegante
    ===================================================== */
 .card-img {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* evita que la imagen sobresalga */
-  border-radius: 16px;
+  overflow: hidden;
+  border-radius: 20px;   /* bordes de imagen más suaves */
   background: #101014;
 }
 
 /* =====================================================
    IMAGEN DE LA CARD
-   Ajusta el tamaño sin deformar y con transición suave
+   Mantiene proporciones y suaviza la animación
    ===================================================== */
 .card-img img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* mantiene proporciones */
+  object-fit: cover;       /* cubre todo el contenedor sin deformar */
   display: block;
-  border-radius: 12px;
+  border-radius: 16px;
   transition: transform 0.4s ease;
 }
 
 /* =====================================================
    EFECTO HOVER DE IMAGEN
-   Ligeramente aumenta la imagen al pasar el mouse
    ===================================================== */
 .card:hover .card-img img {
-  transform: scale(1.05);
+  transform: scale(1.08); /* zoom más visible al pasar mouse */
+}
+
+/* =====================================================
+   MEDIA QUERIES
+   Para pantallas pequeñas se hace responsive:
+   - imagen debajo del texto
+   ===================================================== */
+@media (max-width: 768px) {
+  .card {
+    grid-template-columns: 1fr; /* todo en columna */
+    text-align: center;
+  }
+  .card-img {
+    margin-top: 16px;
+  }
 }
 
 
@@ -1138,6 +1157,7 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
   background-color: #ff1a1a;
   transform: scale(1.05);
 }
+
 
 
 
