@@ -316,9 +316,32 @@ window.registerUser = async function(){
 
   showAlert("Registro exitoso. Revisa tu correo.","success");
 }
-</script>
+  
+const userLayout = document.getElementById("userLayout");
+const userName = document.getElementById("userName");
+const btnLogout = document.getElementById("btnLogout");
 
+// Mostrar usuario si está logueado
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    userLayout.style.display = "flex";
+    userName.textContent = session.user.email; // o session.user.user_metadata.full_name si quieres el nombre
+    loginLayout.style.display = "none";
+    registerLayout.style.display = "none";
+  }
+});
+
+// Logout
+btnLogout.addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  userLayout.style.display = "none";
+  loginLayout.style.display = "block";
+  showAlert("Has cerrado sesión.", "success");
+});
+
+</script>
 </body>
 </html>
+
 
 
