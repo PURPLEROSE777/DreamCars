@@ -745,44 +745,59 @@ async function verificarRol() {
 
 // Ejecutar al cargar la página
 verificarRol();
-// Elementos del header
+// ============================
+// 🔥 CONTROL DE SESIÓN Y ROLES
+// ============================
+
 const userInfo = document.getElementById("userInfo");
 const userName = document.getElementById("userName");
 const btnLogout = document.getElementById("btnLogout");
 const btnLogin = document.querySelector(".btn-login");
+const linkInventario = document.getElementById("linkInventario");
 
-// Revisar sesión y actualizar UI al cargar
+// Función para actualizar la UI según la sesión
+async function actualizarUI(session) {
+  if (session) {
+    userInfo.style.display = "flex";
+    userName.textContent = session.user.user_metadata.full_name || session.user.email;
+    btnLogin.style.display = "none";
+
+    // Verificar rol solo si hay usuario
+    const { data: admin } = await supabase
+      .from("super_usuarios")
+      .select("*")
+      .eq("id_usuario", session.user.id)
+      .maybeSingle();
+
+    if (admin) {
+      linkInventario.style.display = "inline-block";
+    } else {
+      linkInventario.style.display = "none";
+    }
+
+  } else {
+    // Sin sesión
+    userInfo.style.display = "none";
+    btnLogin.style.display = "block";
+    linkInventario.style.display = "none";
+  }
+}
+
+// Inicializar al cargar la página
 document.addEventListener("DOMContentLoaded", async () => {
   const { data: { session } } = await supabase.auth.getSession();
-
-  if (session) {
-    // Usuario logueado
-    userInfo.style.display = "flex";
-    userName.textContent = session.user.user_metadata.full_name || session.user.email;
-    btnLogin.style.display = "none";
-  } else {
-    // No hay sesión
-    userInfo.style.display = "none";
-    btnLogin.style.display = "block";
-  }
+  actualizarUI(session);
 });
 
-// Detectar cambios de sesión en tiempo real (login/logout)
+// Detectar cambios de sesión en tiempo real
 supabase.auth.onAuthStateChange((event, session) => {
-  if (session) {
-    userInfo.style.display = "flex";
-    userName.textContent = session.user.user_metadata.full_name || session.user.email;
-    btnLogin.style.display = "none";
-  } else {
-    userInfo.style.display = "none";
-    btnLogin.style.display = "block";
-  }
+  actualizarUI(session);
 });
 
-
-
-
-
-
-
-
+// Logout
+if (btnLogout) {
+  btnLogout.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    actualizarUI(null);
+  });
+}
