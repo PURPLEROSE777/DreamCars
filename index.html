@@ -31,6 +31,11 @@
     </nav>
     <!-- ⭐ BOTÓN NUEVO DE LOGIN / REGISTRO ⭐ -->
   <button class="btn-login" onclick="window.location.href='login/login.html'">Login / Registro</button>
+    <!-- Usuario logueado -->
+<div id="userInfo" style="display:none; align-items:center; gap:10px; margin-left:20px; color:#fff;">
+  <span id="userName"></span>
+  <button id="btnLogout" class="btn-primario" style="padding:6px 12px;">Cerrar sesión</button>
+</div>
   </header>
 
   <!-- MAIN (contenido principal) - se conserva exactamente el HTML que enviaste -->
@@ -378,6 +383,7 @@
     <script type="module" src="js/cargarMarcas.js"></script>
 </body>
 </html>
+
 
 
 
