@@ -714,82 +714,6 @@ document.addEventListener("DOMContentLoaded", () => {
   actualizarTablaComparativaExtendida();
 });
 
-/* ===================================================
-   🆕 IMPORTAR INVENTARIO DESDE CSV
-   =================================================== */
-
-const invImportarCSV = document.createElement("input");
-invImportarCSV.type = "file";
-invImportarCSV.accept = ".csv";
-invImportarCSV.style.display = "none";
-document.body.appendChild(invImportarCSV);
-btnImportarCSV.addEventListener("click", () => invImportarCSV.click());
-
-invImportarCSV.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    const contenido = event.target.result;
-    const lineas = contenido.split(/\r?\n/).filter(l => l.trim() !== "");
-    if (lineas.length < 2) {
-      alert("El archivo CSV no contiene datos válidos.");
-      return;
-    }
-
-    // Obtener encabezados
-    const headers = lineas[0].split(",").map(h => h.trim().toLowerCase());
-
-    // Campos esperados en CSV
-    const camposEsperados = ["marca","modelo","anio","categoria","stock","precio","costo","imagen"];
-    const faltanCampos = camposEsperados.filter(c => !headers.includes(c));
-    if (faltanCampos.length > 0) {
-      alert(`El CSV no contiene todos los campos requeridos.\nFaltan: ${faltanCampos.join(", ")}`);
-      return;
-    }
-
-    // Parsear filas
-    const nuevosAutos = [];
-    for (let i = 1; i < lineas.length; i++) {
-      const valores = lineas[i].split(",");
-      if (valores.length !== headers.length) continue;
-
-      const auto = {};
-      headers.forEach((h, idx) => {
-        const valor = valores[idx].trim();
-        if (["anio","stock","precio","costo"].includes(h)) {
-          auto[h] = valor ? parseFloat(valor) : 0;
-        } else {
-          auto[h] = valor;
-        }
-      });
-
-      // Validaciones mínimas
-      if (!auto.marca || !auto.modelo || !auto.precio) continue;
-
-      nuevosAutos.push(auto);
-    }
-
-    if (nuevosAutos.length === 0) {
-      alert("No se detectaron autos válidos en el CSV.");
-      return;
-    }
-
-    // Confirmar antes de importar
-    if (!confirm(`Se detectaron ${nuevosAutos.length} autos en el CSV.\n¿Quieres agregarlos al inventario?`)) return;
-
-    // Agregar autos y renderizar
-    inventario = [...inventario, ...nuevosAutos];
-    localStorage.setItem("inventarioAutos", JSON.stringify(inventario));
-    renderInventario();
-
-    alert(`Se importaron ${nuevosAutos.length} autos correctamente ✅`);
-  };
-
-  reader.readAsText(file);
-  e.target.value = "";
-});
 
 // ============================
 // 🔥 CONTROL DE ROLES
@@ -821,6 +745,7 @@ async function verificarRol() {
 
 // Ejecutar al cargar la página
 verificarRol();
+
 
 
 
