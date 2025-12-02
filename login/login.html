@@ -229,31 +229,37 @@ body{
 </div>
 
 <script>
-/*** UI BASICA ***/
-function showLogin(){
-  loginLayout.style.display="block";
-  registerLayout.style.display="none";
-  tabs[0].classList.add("active");
-  tabs[1].classList.remove("active");
-}
-function showRegister(){
-  loginLayout.style.display="none";
-  registerLayout.style.display="block";
-  tabs[1].classList.add("active");
-  tabs[0].classList.remove("active");
-}
-function togglePwd(id){
-  let i=document.getElementById(id);
-  i.type=i.type==="password"?"text":"password";
-}
-function showAlert(msg,type="error"){
-  alertBox.innerHTML=`<div class="alert ${type}">${msg}</div>`;
-}
+window.addEventListener("DOMContentLoaded", () => {
 
-const loginLayout = document.getElementById("login-layout");
-const registerLayout = document.getElementById("register-layout");
-const alertBox = document.getElementById("alert-container");
-const tabs = document.getElementsByClassName("tab");
+  const loginLayout = document.getElementById("login-layout");
+  const registerLayout = document.getElementById("register-layout");
+  const alertBox = document.getElementById("alert-container");
+  const tabs = document.getElementsByClassName("tab");
+
+  window.showLogin = function(){
+    loginLayout.style.display = "block";
+    registerLayout.style.display = "none";
+    tabs[0].classList.add("active");
+    tabs[1].classList.remove("active");
+  }
+
+  window.showRegister = function(){
+    loginLayout.style.display = "none";
+    registerLayout.style.display = "block";
+    tabs[1].classList.add("active");
+    tabs[0].classList.remove("active");
+  }
+
+  window.togglePwd = function(id){
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+  }
+
+  window.showAlert = function(msg, type="error"){
+    alertBox.innerHTML = `<div class="alert ${type}">${msg}</div>`;
+  }
+
+});
 </script>
 
 <!-- SUPABASE REAL -->
@@ -308,3 +314,4 @@ window.registerUser = async function(){
 
 </body>
 </html>
+
