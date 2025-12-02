@@ -1344,4 +1344,11 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
               inset 0 0 30px rgba(255, 0, 0, 0.5);
   border-color: #ff1a1a;
 }
+/* Scroll interno para overlay de galería */
+#galeriaOverlay .overlay-body {
+  max-height: 75vh;   /* Ocupa máximo 75% de la altura de la ventana */
+  overflow-y: auto;   /* Scroll vertical automático */
+  padding-right: 10px; /* Opcional: espacio para que no tape el scroll */
+}
+
 
