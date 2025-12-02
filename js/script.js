@@ -745,6 +745,7 @@ async function verificarRol() {
 
 // Ejecutar al cargar la página
 verificarRol();
+
 // ============================
 // 🔥 CONTROL DE SESIÓN Y LOGOUT DINÁMICO
 // ============================
@@ -752,7 +753,7 @@ verificarRol();
 const userInfo = document.getElementById("userInfo");
 const userName = document.getElementById("userName");
 const btnLogout = document.getElementById("btnLogout");
-const btnLogin = document.querySelector(".btn-login");
+const btnLogin = document.getElementById("btnLogin"); // asegurar que tiene ID
 const linkInventario = document.getElementById("linkInventario");
 
 // Función para actualizar la UI según la sesión
@@ -765,12 +766,14 @@ async function actualizarUI(session) {
     if (btnLogout) btnLogout.style.display = "inline-block";
 
     // Verificar rol de administrador
-    const { data: admin } = await supabase
+    const { data: admin, error } = await supabase
       .from("super_usuarios")
       .select("*")
       .eq("id_usuario", session.user.id)
       .maybeSingle();
 
+    if (error) console.error("Error al verificar rol:", error);
+    
     if (admin && linkInventario) {
       linkInventario.style.display = "inline-block";
     } else if (linkInventario) {
@@ -803,7 +806,7 @@ if (btnLogout) {
     try {
       await supabase.auth.signOut(); // cerrar sesión
       actualizarUI(null);             // actualizar UI sin recargar
-      cerrarOverlays();               // cerrar cualquier overlay activo
+      if (typeof cerrarOverlays === "function") cerrarOverlays(); // cerrar overlays
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
       alert("No se pudo cerrar sesión. Intenta de nuevo.");
