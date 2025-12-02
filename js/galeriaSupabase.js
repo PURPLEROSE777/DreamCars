@@ -6,7 +6,7 @@
 import { supabase } from "./script.js";
 
 // Nombre del bucket donde guardas las imágenes
-const BUCKET = "marcas";
+const BUCKET = "image";
 
 
 // ============================================================
