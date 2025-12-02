@@ -398,6 +398,17 @@ function registerUser(){
 
   showAlert("Aquí va lógica de Supabase para registrarse…", "success");
 }
+
+  <script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+export const supabase = createClient(
+  "TU_URL_SUPABASE",
+  "TU_API_PUBLIC_ANON"
+);
+</script>
+
 </script>
 </body>
 </html>
+
