@@ -714,80 +714,95 @@ document.addEventListener("DOMContentLoaded", () => {
   actualizarTablaComparativaExtendida();
 });
 
-// =========================
-// LOGIN OVERLAY HANDLER
-// =========================
-const loginOverlay = document.getElementById("loginOverlay");
-const btnLogin = document.getElementById("btnLogin");
-const userInfo = document.getElementById("userInfo");
-const userName = document.getElementById("userName");
-const btnLogout = document.getElementById("btnLogout");
+document.addEventListener("DOMContentLoaded", () => {
 
-// Abrir login
-btnLogin?.addEventListener("click", () => {
-  loginOverlay.style.display = "flex";
-});
+  // =========================
+  // LOGIN OVERLAY HANDLER
+  // =========================
+  const loginOverlay = document.getElementById("loginOverlay");
+  const btnLogin = document.getElementById("btnLogin");
+  const userInfo = document.getElementById("userInfo");
+  const userName = document.getElementById("userName");
+  const btnLogout = document.getElementById("btnLogout");
 
-// Tabs login/register
-document.getElementById("tabLogin").addEventListener("click", () => {
-  document.getElementById("login-layout").style.display = "block";
-  document.getElementById("register-layout").style.display = "none";
-  document.getElementById("tabLogin").classList.add("active");
-  document.getElementById("tabRegister").classList.remove("active");
-});
+  // Si alguno no existe, no seguimos para evitar errores
+  if (!loginOverlay || !btnLogin) return;
 
-document.getElementById("tabRegister").addEventListener("click", () => {
-  document.getElementById("login-layout").style.display = "none";
-  document.getElementById("register-layout").style.display = "block";
-  document.getElementById("tabRegister").classList.add("active");
-  document.getElementById("tabLogin").classList.remove("active");
-});
-
-// Cerrar overlay al hacer click fuera
-loginOverlay.addEventListener("click", (e) => {
-  if (e.target === loginOverlay) loginOverlay.style.display = "none";
-});
-
-// -----------------------------
-// ACCIÓN REAL: LOGIN
-// -----------------------------
-document.getElementById("btnDoLogin").addEventListener("click", async () => {
-  const email = document.getElementById("login-email").value.trim();
-  const pass = document.getElementById("login-pass").value.trim();
-
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-
-  if (error) {
-    alert("Error al iniciar sesión: " + error.message);
-    return;
-  }
-
-  loginOverlay.style.display = "none";
-  btnLogin.style.display = "none";
-  userInfo.style.display = "flex";
-  userName.textContent = data.user.email;
-});
-
-// -----------------------------
-// ACCIÓN REAL: REGISTRO
-// -----------------------------
-document.getElementById("btnDoRegister").addEventListener("click", async () => {
-  const email = document.getElementById("reg-email").value.trim();
-  const pass = document.getElementById("reg-pass").value.trim();
-  const name = document.getElementById("reg-name").value.trim();
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password: pass,
-    options: { data: { name } }
+  // Abrir login
+  btnLogin.addEventListener("click", () => {
+    loginOverlay.style.display = "flex";
   });
 
-  if (error) {
-    alert("Error al crear usuario: " + error.message);
-    return;
+  // Tabs login/register
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+
+  if (tabLogin && tabRegister) {
+    tabLogin.addEventListener("click", () => {
+      document.getElementById("login-layout").style.display = "block";
+      document.getElementById("register-layout").style.display = "none";
+      tabLogin.classList.add("active");
+      tabRegister.classList.remove("active");
+    });
+
+    tabRegister.addEventListener("click", () => {
+      document.getElementById("login-layout").style.display = "none";
+      document.getElementById("register-layout").style.display = "block";
+      tabRegister.classList.add("active");
+      tabLogin.classList.remove("active");
+    });
   }
 
-  alert("Cuenta creada. Revisa tu correo para confirmar.");
+  // Cerrar overlay
+  loginOverlay.addEventListener("click", (e) => {
+    if (e.target === loginOverlay) loginOverlay.style.display = "none";
+  });
+
+  // -----------------------------
+  // ACCIÓN REAL: LOGIN
+  // -----------------------------
+  document.getElementById("btnDoLogin")?.addEventListener("click", async () => {
+    const email = document.getElementById("login-email").value.trim();
+    const pass = document.getElementById("login-pass").value.trim();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: pass
+    });
+
+    if (error) {
+      alert("Error al iniciar sesión: " + error.message);
+      return;
+    }
+
+    loginOverlay.style.display = "none";
+    btnLogin.style.display = "none";
+    userInfo.style.display = "flex";
+    userName.textContent = data.user.email;
+  });
+
+  // -----------------------------
+  // ACCIÓN REAL: REGISTRO
+  // -----------------------------
+  document.getElementById("btnDoRegister")?.addEventListener("click", async () => {
+    const email = document.getElementById("reg-email").value.trim();
+    const pass = document.getElementById("reg-pass").value.trim();
+    const name = document.getElementById("reg-name").value.trim();
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: pass,
+      options: { data: { name } }
+    });
+
+    if (error) {
+      alert("Error al crear usuario: " + error.message);
+      return;
+    }
+
+    alert("Cuenta creada. Revisa tu correo para confirmar.");
+  });
+
 });
 
 
@@ -824,5 +839,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
