@@ -746,7 +746,7 @@ async function verificarRol() {
 // Ejecutar al cargar la página
 verificarRol();
 // ============================
-// 🔥 CONTROL DE SESIÓN Y ROLES
+// 🔥 CONTROL DE SESIÓN Y LOGOUT DINÁMICO
 // ============================
 
 const userInfo = document.getElementById("userInfo");
@@ -758,46 +758,55 @@ const linkInventario = document.getElementById("linkInventario");
 // Función para actualizar la UI según la sesión
 async function actualizarUI(session) {
   if (session) {
-    userInfo.style.display = "flex";
-    userName.textContent = session.user.user_metadata.full_name || session.user.email;
-    btnLogin.style.display = "none";
+    // Mostrar info de usuario
+    if (userInfo) userInfo.style.display = "flex";
+    if (userName) userName.textContent = session.user.user_metadata.full_name || session.user.email;
+    if (btnLogin) btnLogin.style.display = "none";
+    if (btnLogout) btnLogout.style.display = "inline-block";
 
-    // Verificar rol solo si hay usuario
+    // Verificar rol de administrador
     const { data: admin } = await supabase
       .from("super_usuarios")
       .select("*")
       .eq("id_usuario", session.user.id)
       .maybeSingle();
 
-    if (admin) {
+    if (admin && linkInventario) {
       linkInventario.style.display = "inline-block";
-    } else {
+    } else if (linkInventario) {
       linkInventario.style.display = "none";
     }
 
   } else {
-    // Sin sesión
-    userInfo.style.display = "none";
-    btnLogin.style.display = "block";
-    linkInventario.style.display = "none";
+    // Sin sesión activa
+    if (userInfo) userInfo.style.display = "none";
+    if (btnLogout) btnLogout.style.display = "none";
+    if (btnLogin) btnLogin.style.display = "block";
+    if (linkInventario) linkInventario.style.display = "none";
   }
 }
 
-// Inicializar al cargar la página
+// Inicializar UI al cargar la página
 document.addEventListener("DOMContentLoaded", async () => {
   const { data: { session } } = await supabase.auth.getSession();
   actualizarUI(session);
 });
 
-// Detectar cambios de sesión en tiempo real
+// Detectar cambios de sesión en tiempo real (login / logout)
 supabase.auth.onAuthStateChange((event, session) => {
   actualizarUI(session);
 });
 
-// Logout
+// Logout dinámico
 if (btnLogout) {
   btnLogout.addEventListener("click", async () => {
-    await supabase.auth.signOut();
-    actualizarUI(null);
+    try {
+      await supabase.auth.signOut(); // cerrar sesión
+      actualizarUI(null);             // actualizar UI sin recargar
+      cerrarOverlays();               // cerrar cualquier overlay activo
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error.message);
+      alert("No se pudo cerrar sesión. Intenta de nuevo.");
+    }
   });
 }
