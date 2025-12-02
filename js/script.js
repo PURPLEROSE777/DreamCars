@@ -21,20 +21,26 @@ linkInicio.addEventListener('click', (e) => {
 });
 
 // === GALERÍA ===
-const linkGaleria  = document.getElementById('linkGaleria');
-const galeria      = document.getElementById('galeriaOverlay');
-const cerrarGaleriaBtn = document.getElementById('cerrarGaleria');
-const volverInicioDesdeGaleria = document.getElementById('volverInicioDesdeGaleria');
 
-linkGaleria.addEventListener('click', (e)=>{
-  e.preventDefault();
-  abrirOverlay(galeria);
-});
-cerrarGaleriaBtn.addEventListener('click', ()=> cerrarOverlay(galeria));
-volverInicioDesdeGaleria.addEventListener('click', ()=>{
-  cerrarOverlay(galeria);
-  document.querySelector('#inicio').scrollIntoView({ behavior:'smooth' });
-});
+// Elementos que SÍ existen en tu HTML
+const linkGaleria        = document.getElementById('linkGaleria');
+const galeria            = document.getElementById('galeriaOverlay');
+const cerrarGaleriaBtn   = document.getElementById('cerrarGaleria');
+
+// Validaciones por si alguno no existe (evita errores)
+if (linkGaleria && galeria && cerrarGaleriaBtn) {
+
+  // Abrir galería
+  linkGaleria.addEventListener('click', (e) => {
+    e.preventDefault();
+    abrirOverlay(galeria);
+  });
+
+  // Cerrar galería
+  cerrarGaleriaBtn.addEventListener('click', () => {
+    cerrarOverlay(galeria);
+  });
+}
 
 // === AUTORES ===
 const linkAutores  = document.getElementById('linkAutores');
@@ -820,6 +826,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
