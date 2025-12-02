@@ -60,3 +60,42 @@ async function cargarMarcas() {
 
 // Ejecutar la carga
 document.addEventListener("DOMContentLoaded", cargarMarcas);
+// ==========================================================
+// Scroll infinito: Reveal de cards al entrar en viewport
+// ==========================================================
+
+// Función que activa el efecto de animación al entrar en pantalla
+function initScrollReveal() {
+  // Seleccionamos todas las cards
+  const cards = document.querySelectorAll(".card");
+
+  // Intersection Observer: detecta cuando un elemento entra en la ventana
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Cuando la card aparece, agregamos la clase 'reveal'
+          entry.target.classList.add("reveal");
+          // Dejamos de observar esta card
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1 // Se activa cuando el 10% de la card es visible
+    }
+  );
+
+  // Observamos cada card
+  cards.forEach(card => observer.observe(card));
+}
+
+// ==========================================================
+// Ejecutar el efecto después de cargar las marcas
+// ==========================================================
+document.addEventListener("DOMContentLoaded", () => {
+  cargarMarcas().then(() => {
+    initScrollReveal(); // Activamos la animación
+  });
+});
+
