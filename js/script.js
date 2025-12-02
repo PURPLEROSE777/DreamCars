@@ -510,45 +510,6 @@ document.querySelectorAll("#tablaInventario th[data-sort]").forEach(th=>{
     });
   });
 });
-// === BOTÓN EXPORTAR CSV ===
-document.getElementById('invExportarCSV').addEventListener('click', () => {
-  if (inventario.length === 0) {
-    alert('No hay autos en el inventario.');
-    return;
-  }
-
-  const encabezados = [
-    "Marca","Modelo","Año","Categoría","Stock",
-    "Precio","Costo","Margen (%)","Valor Total","Imagen"
-  ];
-
-  const filas = inventario.map(auto => [
-    auto.marca,
-    auto.modelo,
-    auto.anio,
-    auto.categoria,
-    auto.stock,
-    `$${auto.precio}`,
-    `$${auto.costo || 0}`,
-    `${auto.margen}%`,
-    `$${(auto.precio * auto.stock).toFixed(2)}`,
-    auto.imagen || "N/A"
-  ]);
-
-  const csv = [encabezados, ...filas].map(row => row.join(",")).join("\n");
-
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "inventario_autos.csv";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-
 // === SINCRONIZAR TABLA COMPARATIVA ===
 function actualizarTablaComparativa() {
   const tbody = document.querySelector('#tablaOverlay tbody');
@@ -839,6 +800,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
