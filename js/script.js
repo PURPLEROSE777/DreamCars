@@ -728,20 +728,20 @@ async function verificarRol() {
     document.getElementById("linkInventario").style.display = "none";
     return;
   }
+// si es un administrador muestra layoutu inventario
+  
+const { data: perfil } = await supabase
+  .from("profiles")
+  .select("role")
+  .eq("id", user.id)
+  .maybeSingle();
 
-  // Buscar si es super usuario
-  const { data: admin, error } = await supabase
-    .from("super_usuarios")
-    .select("*")
-    .eq("id_usuario", user.id)
-    .maybeSingle();
-// Si no es admin ocultar inventario
-  if (!admin) {
-    document.getElementById("linkInventario").style.display = "none";
-  } else {
-    document.getElementById("linkInventario").style.display = "inline-block";
-  }
+if (perfil?.role === "admin") {
+  document.getElementById("linkInventario").style.display = "inline-block";
+} else {
+  document.getElementById("linkInventario").style.display = "none";
 }
+
 
 // Ejecutar al cargar la página
 verificarRol();
@@ -803,3 +803,4 @@ if (userInfo && userName && btnLogout && btnLogin) { // ← solo ejecutar si exi
   });
 
 }
+
