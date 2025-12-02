@@ -56,27 +56,76 @@ body{
 .titulo{ margin:0 0 6px; font-size:40px; letter-spacing:.3px; }
 .subtitulo{ margin:0; color:var(--muted); }
 
-/* === CARDS DE MARCAS === */
-.marcas{ margin-top:36px; display:grid; grid-template-columns:1fr; gap:24px; }
-.card{
-  display:grid; grid-template-columns: 1.1fr .9fr; gap:20px;
-  background:var(--card); border:1px solid #242531;
-  border-radius:20px; box-shadow:var(--shadow);
-  padding:22px; transform:translateY(12px); opacity:0; transition:.6s ease;
+/* === CARDS DE MARCAS — OPTIMIZADO PARA SUPABASE === */
+.marcas {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
 }
-.card.revealed{ transform:none; opacity:1; }
-.card:hover{ outline:1px solid #2c2d3a; }
-.card h2{ margin:0 0 8px; color:var(--accent); font-size:26px; }
-.card p{ margin:0 0 10px; color:#ddd; line-height:1.55; }
-.card-img{
-  overflow:hidden; border-radius:16px; align-self:stretch;
-  background:#101014; display:flex; align-items:center; justify-content:center;
+
+/* Card individual */
+.card {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 20px;
+  background: var(--card);
+  border: 1px solid #242531;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform 0.6s ease, opacity 0.6s ease;
 }
-.card-img img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  transform:scale(1.02); transition: transform .4s ease;
+
+.card.revealed {
+  transform: none;
+  opacity: 1;
 }
-.card:hover .card-img img{ transform:scale(1.08); }
+
+.card:hover {
+  outline: 1px solid #2c2d3a;
+}
+
+/* Título y párrafo dentro de la card */
+.card h2 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 26px;
+}
+
+.card p {
+  margin: 0 0 10px;
+  color: #ddd;
+  line-height: 1.55;
+}
+
+/* Contenedor de imagen */
+.card-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #101014;
+  align-self: stretch;
+}
+
+/* Imagen dentro de la card */
+.card-img img {
+  max-width: 100%;      /* no se salga del contenedor */
+  max-height: 100%;     /* respeta proporciones */
+  object-fit: contain;  /* ajusta la imagen completa sin cortar */
+  display: block;
+  border-radius: 12px;
+  transition: transform 0.4s ease;
+}
+
+/* Hover sobre la card */
+.card:hover .card-img img {
+  transform: scale(1.05); /* ligero zoom */
+}
 
 /* === FORMULARIO GENERAL (contacto o sugerencias) === */
 .formulario{
@@ -1059,6 +1108,7 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
   background-color: #ff1a1a;
   transform: scale(1.05);
 }
+
 
 
 
