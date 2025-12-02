@@ -811,7 +811,7 @@ async function verificarRol() {
     .select("*")
     .eq("id_usuario", user.id)
     .maybeSingle();
-
+// Si no es admin ocultar inventario
   if (!admin) {
     document.getElementById("linkInventario").style.display = "none";
   } else {
@@ -821,6 +821,7 @@ async function verificarRol() {
 
 // Ejecutar al cargar la página
 verificarRol();
+
 
 
 
