@@ -791,5 +791,37 @@ invImportarCSV.addEventListener("change", (e) => {
   e.target.value = "";
 });
 
+// ============================
+// 🔥 CONTROL DE ROLES
+// ============================
+async function verificarRol() {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  // Si no hay usuario → Oculta inventario
+  if (!user) {
+    document.getElementById("linkInventario").style.display = "none";
+    return;
+  }
+
+  // Buscar si es super usuario
+  const { data: admin, error } = await supabase
+    .from("super_usuarios")
+    .select("*")
+    .eq("id_usuario", user.id)
+    .maybeSingle();
+
+  if (!admin) {
+    document.getElementById("linkInventario").style.display = "none";
+  } else {
+    document.getElementById("linkInventario").style.display = "inline-block";
+  }
+}
+
+// Ejecutar al cargar la página
+verificarRol();
+
+
 
 
