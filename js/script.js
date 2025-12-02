@@ -812,3 +812,11 @@ if (btnLogout) {
     }
   });
 }
+// plis funciona
+const btnLogout = document.getElementById("btnLogout");
+
+btnLogout.addEventListener("click", async () => {
+  await supabase.auth.signOut(); // cierra sesión
+  window.location.href = "login.html"; // vuelve al login
+});
+
