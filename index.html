@@ -66,25 +66,11 @@
   <!-- Aquí el JS insertará las tarjetas -->
 </section>
   <!-- Terminan Descripciones principales -->
-
-  <!-- OVERLAY GALERÍA (sin cambios) -->
-  <div class="overlay" id="galeriaOverlay" aria-hidden="true" role="dialog">
-    <div class="overlay-content">
-      <div class="overlay-head">
-        <h2>Galería</h2>
-        <button class="btn-cerrar" id="cerrarGaleria" aria-label="Cerrar galería">✕</button>
-      </div>
-      <div class="grid-galeria">
-        <img src="images/galeria1.jpg" alt="Foto 1">
-        <img src="images/galeria2.jpg" alt="Foto 2">
-        <img src="images/galeria3.jpg" alt="Foto 3">
-        <img src="images/galeria4.jpg" alt="Foto 4">
-      </div>
-      <div class="overlay-actions">
-        <button class="btn-primario" id="volverInicioDesdeGaleria">Volver a Inicio</button>
-      </div>
-    </div>
-  </div>
+    
+<!-- Conectamos el partado galeria con SUPABASE-->
+  <div class="grid-galeria" id="galeriaContainer">
+  <!-- JS insertará las imágenes desde Supabase -->
+</div>
 
   <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
 <div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
@@ -416,6 +402,7 @@
     <script type="module" src="js/cargarMarcas.js"></script>
 </body>
 </html>
+
 
 
 
