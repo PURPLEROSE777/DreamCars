@@ -747,70 +747,59 @@ async function verificarRol() {
 verificarRol();
 
 // ============================
-// 🔥 CONTROL DE SESIÓN Y LOGOUT DINÁMICO
+// 🔥 CONTROL DE SESIÓN Y LOGOUT DINÁMICO (VERSIÓN SEGURA)
 // ============================
-
 const userInfo = document.getElementById("userInfo");
 const userName = document.getElementById("userName");
 const btnLogout = document.getElementById("btnLogout");
-const btnLogin = document.getElementById("btnLogin"); // asegurar que tiene ID
+const btnLogin = document.getElementById("btnLogin");
 
-// Función para actualizar la UI según la sesión
-async function actualizarUI(session) {
-  if (session) {
-    // Mostrar info de usuario
-    if (userInfo) userInfo.style.display = "flex";
-    if (userName) userName.textContent = session.user.user_metadata.full_name || session.user.email;
-    if (btnLogin) btnLogin.style.display = "none";
-    if (btnLogout) btnLogout.style.display = "inline-block";
+if (userInfo && userName && btnLogout && btnLogin) { // ← solo ejecutar si existen todos
 
-    // Verificar rol de administrador
-    const { data: admin, error } = await supabase
-      .from("super_usuarios")
-      .select("*")
-      .eq("id_usuario", session.user.id)
-      .maybeSingle();
+  async function actualizarUI(session) {
+    if (session) {
+      userInfo.style.display = "flex";
+      userName.textContent = session.user.user_metadata.full_name || session.user.email;
+      btnLogin.style.display = "none";
+      btnLogout.style.display = "inline-block";
 
-    if (error) console.error("Error al verificar rol:", error);
-    
-    if (admin && linkInventario) {
-      linkInventario.style.display = "inline-block";
-    } else if (linkInventario) {
-      linkInventario.style.display = "none";
+      // Mostrar inventario si es admin
+      const { data: admin, error } = await supabase
+        .from("super_usuarios")
+        .select("*")
+        .eq("id_usuario", session.user.id)
+        .maybeSingle();
+      if (linkInventario) linkInventario.style.display = (admin) ? "inline-block" : "none";
+
+    } else {
+      userInfo.style.display = "none";
+      btnLogout.style.display = "none";
+      btnLogin.style.display = "block";
+      if (linkInventario) linkInventario.style.display = "none";
     }
-
-  } else {
-    // Sin sesión activa
-    if (userInfo) userInfo.style.display = "none";
-    if (btnLogout) btnLogout.style.display = "none";
-    if (btnLogin) btnLogin.style.display = "block";
-    if (linkInventario) linkInventario.style.display = "none";
   }
-}
 
-// Inicializar UI al cargar la página
-document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  actualizarUI(session);
-});
+  // Inicializar UI al cargar la página
+  document.addEventListener("DOMContentLoaded", async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    actualizarUI(session);
+  });
 
-// Detectar cambios de sesión en tiempo real (login / logout)
-supabase.auth.onAuthStateChange((event, session) => {
-  actualizarUI(session);
-});
+  // Detectar cambios de sesión en tiempo real
+  supabase.auth.onAuthStateChange((event, session) => {
+    actualizarUI(session);
+  });
 
-// Logout dinámico
-if (btnLogout) {
+  // Logout dinámico
   btnLogout.addEventListener("click", async () => {
     try {
-      await supabase.auth.signOut(); // cerrar sesión
-      actualizarUI(null);             // actualizar UI sin recargar
-      if (typeof cerrarOverlays === "function") cerrarOverlays(); // cerrar overlays
+      await supabase.auth.signOut();
+      actualizarUI(null);
+      if (typeof cerrarOverlays === "function") cerrarOverlays();
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
       alert("No se pudo cerrar sesión. Intenta de nuevo.");
     }
   });
+
 }
-
-
