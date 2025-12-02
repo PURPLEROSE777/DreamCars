@@ -780,7 +780,7 @@ if (btnLogout) {
     localStorage.removeItem("usuarioActivo");
 
     // Redirige al login
-    window.location.href = "/login.html";
+    window.location.href = "index.html";
   });
 } else {
   console.warn("btnLogout no existe en el DOM");
@@ -820,6 +820,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
