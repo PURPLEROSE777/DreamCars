@@ -751,22 +751,35 @@ const userName = document.getElementById("userName");
 const btnLogout = document.getElementById("btnLogout");
 const btnLogin = document.querySelector(".btn-login");
 
-// Revisar si hay sesión activa al cargar la página
-supabase.auth.getSession().then(({ data: { session } }) => {
+// Revisar sesión y actualizar UI al cargar
+document.addEventListener("DOMContentLoaded", async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (session) {
+    // Usuario logueado
+    userInfo.style.display = "flex";
+    userName.textContent = session.user.user_metadata.full_name || session.user.email;
+    btnLogin.style.display = "none";
+  } else {
+    // No hay sesión
+    userInfo.style.display = "none";
+    btnLogin.style.display = "block";
+  }
+});
+
+// Detectar cambios de sesión en tiempo real (login/logout)
+supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
     userInfo.style.display = "flex";
     userName.textContent = session.user.user_metadata.full_name || session.user.email;
     btnLogin.style.display = "none";
+  } else {
+    userInfo.style.display = "none";
+    btnLogin.style.display = "block";
   }
 });
 
-// Logout
-btnLogout.addEventListener("click", async () => {
-  await supabase.auth.signOut();
-  userInfo.style.display = "none";
-  btnLogin.style.display = "block";
-  alert("Has cerrado sesión.");
-});
+
 
 
 
