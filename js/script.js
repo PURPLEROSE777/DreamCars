@@ -754,7 +754,6 @@ const userInfo = document.getElementById("userInfo");
 const userName = document.getElementById("userName");
 const btnLogout = document.getElementById("btnLogout");
 const btnLogin = document.getElementById("btnLogin"); // asegurar que tiene ID
-const linkInventario = document.getElementById("linkInventario");
 
 // Función para actualizar la UI según la sesión
 async function actualizarUI(session) {
