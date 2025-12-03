@@ -1350,5 +1350,44 @@ a:focus,button:focus,input:focus{ outline:2px solid var(--accent-2); }
   overflow-y: auto;   /* Scroll vertical automático */
   padding-right: 10px; /* Opcional: espacio para que no tape el scroll */
 }
+.preview-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1e1f29;
+  border-radius: 12px;
+  padding: 8px;
+  margin: 6px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.preview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+.preview-card img {
+  max-width: 80px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+.preview-card p {
+  text-align: center;
+  font-weight: 500;
+  color: #fff;
+}
+.preview-card p .highlight {
+  background-color: #ffce69;
+  color: #000;
+  font-weight: 600;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+#resultados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 
 
