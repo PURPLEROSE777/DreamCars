@@ -80,14 +80,15 @@
     </div>
   </div>
 </div> 
-  <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
+  
+   <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
 <div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
   <div class="overlay-content autores">
     <div class="overlay-head">
       <h2>Desarrollado por</h2>
       <button class="btn-cerrar" id="cerrarAutores" aria-label="Cerrar autores">✕</button>
     </div>
- <!-- 🔹 Cuerpo del overlay con scroll interno -->
+    <!-- 🔹 Cuerpo del overlay con scroll interno -->
     <div class="overlay-body" style="padding: 20px; overflow-y: auto; max-height: 75vh;">
       <!-- 🧑‍💻 Lista de desarrolladores -->
       <ul class="lista-autores">
@@ -95,6 +96,7 @@
         <li>Davila Maldonado Julian</li>
         <li>Perez Pinilla Alan</li>
       </ul>
+
       <!-- 🚗 Sección informativa del proyecto -->
       <section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 10px;">
         <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Acerca del Proyecto — DreamCars</h3>
@@ -102,6 +104,70 @@
         <p><strong>Visión:</strong> Convertirse en una plataforma educativa y visual reconocida por su presentación clara, estética moderna y utilidad para los apasionados del automovilismo y la tecnología.</p>
         <p><strong>Introducción:</strong> DreamCars es un proyecto web diseñado para mostrar la evolución, características y legado de las marcas de autos más legendarias. Además, incluye herramientas de gestión y análisis de inventario, integrando la historia automotriz con una experiencia digital interactiva.</p>
 
+  <!-- DOCUMENTACIÓN TÉCNICA -->
+
+
+<section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 20px;">
+  <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Documentación Técnica — DreamCars</h3>
+  <p><strong>Introducción:</strong> Este documento explica paso a paso cómo se implementó la conexión con la base de datos, la carga de marcas e imágenes de la aplicación DreamCars.</p>
+
+  <!-- 1. Tabla de marcas -->
+  <h4>1. Tabla de marcas</h4>
+  <p>
+    Creamos un archivo JS para cargar las marcas y una tabla en la base de datos. Antes estos
+    datos estaban locales, ahora se gestionan con Supabase.  
+    Imagen explicativa: <img src="images/tabla_marcas.jpg" alt="Tabla de marcas" class="img-doc" />
+  </p>
+  <p><strong>Qué es un Bucket en Supabase?:</strong>  
+     <img src="images/bucket_explicacion.jpg" alt="Bucket explicación" class="img-doc" />
+  </p>
+  <ul>
+    <li><strong>A.</strong> Creamos un Bucket: <img src="images/bucket_crear.jpg" alt="Crear Bucket" class="img-doc" /></li>
+    <li><strong>B.</strong> Configuramos reglas (lectura pública, tamaño, formatos): <img src="images/bucket_reglas.jpg" alt="Reglas Bucket" class="img-doc" /></li>
+    <li><strong>C.</strong> Subimos archivos locales: <img src="images/bucket_subida.jpg" alt="Subida archivos" class="img-doc" /></li>
+    <li><strong>D.</strong> Obtenemos URLs para la base de datos: <img src="images/bucket_urls.jpg" alt="URLs Bucket" class="img-doc" /></li>
+  </ul>
+  <p><strong>Ingreso de datos en PostgreSQL:</strong>  
+     <img src="images/postgres_tabla.jpg" alt="Base de datos" class="img-doc" />
+  </p>
+  <ul>
+    <li><strong>A.</strong> Crear tabla: <img src="images/tabla_crear.jpg" alt="Crear tabla marcas" class="img-doc" /></li>
+    <li><strong>B.</strong> Insertar datos: <img src="images/tabla_insertar.jpg" alt="Insertar datos marcas" class="img-doc" /></li>
+    <li><strong>C.</strong> Configurar índices y verificaciones: <img src="images/tabla_config.jpg" alt="Config tablas" class="img-doc" /></li>
+    <li><strong>D.</strong> Verificar funcionamiento: <img src="images/tabla_verificar.jpg" alt="Verificación tabla" class="img-doc" /></li>
+  </ul>
+  
+  <!-- 2. Usuarios -->
+  <h4>2. Tablas de inicio de sesión y registro</h4>
+  <ul>
+    <li><strong>A.</strong> Tabla Profiles con datos parciales de usuarios: <img src="images/profiles_tabla.jpg" alt="Tabla Profiles" class="img-doc" /></li>
+    <li><strong>B.</strong> Registro de perfil Administrador: <img src="images/admin_registro.jpg" alt="Registro Admin" class="img-doc" /></li>
+    <li><strong>C.</strong> Verificación de autenticidad: <img src="images/verificacion.jpg" alt="Verificación" class="img-doc" /></li>
+    <li><strong>D.</strong> Organización de roles en Auth: <img src="images/auth_roles.jpg" alt="Auth roles" class="img-doc" /></li>
+  </ul>
+
+  <!-- 3. Galería -->
+  <h4>3. Tabla de imágenes para la galería</h4>
+  <ul>
+    <li><strong>A.</strong> Crear tabla e insertar URLs del Bucket: <img src="images/galeria_tabla.jpg" alt="Tabla Galería" class="img-doc" /></li>
+    <li><strong>B.</strong> Verificar tabla: <img src="images/galeria_verificar.jpg" alt="Verificación Galería" class="img-doc" /></li>
+    <li><strong>C.</strong> Visualizar imágenes exportadas: <img src="images/galeria_vista.jpg" alt="Galería completa" class="img-doc" /></li>
+  </ul>
+</section>
+
+<!-- Continuacion de parte teorica -->
+        <p><strong>Objetivo general:</strong> Desarrollar una aplicación web funcional e intuitiva que permita consultar, administrar y visualizar información detallada sobre autos y marcas de manera dinámica.</p>
+        <p><strong>Objetivos específicos:</strong></p>
+        <ul style="margin-left: 20px;">
+          <li>Implementar una interfaz moderna, adaptable y fácil de usar.</li>
+          <li>Integrar funciones de inventario con filtrado, búsqueda y exportación de datos.</li>
+          <li>Mostrar la historia y los íconos más representativos de cada marca.</li>
+          <li>Fomentar el interés por el automovilismo mediante la tecnología y el diseño web.</li>
+        </ul>
+      </section>
+    </div><!-- /.overlay-body -->
+  </div><!-- /.overlay-content -->
+</div><!-- /.overlay -->
 
   <!-- OVERLAY TABLA COMPARATIVA (sin cambios) -->
   <div class="overlay" id="tablaOverlay" aria-hidden="true" role="dialog">
@@ -392,6 +458,7 @@
     <script type="module" src="js/galeriaSupabase.js"></script>
 </body>
 </html>
+
 
 
 
