@@ -142,23 +142,19 @@ const inputMarca = document.getElementById('marca');
 const msg = document.getElementById('mensaje');
 const resultados = document.getElementById('resultados');
 
-// Botón buscar
 btnSugerir.addEventListener('click', (e) => {
   e.preventDefault();
   buscarMarcaSupabase(inputMarca.value.trim());
 });
 
-// Buscar también al presionar Enter
 inputMarca.addEventListener('keyup', (e) => {
   if (e.key === 'Enter') {
     buscarMarcaSupabase(inputMarca.value.trim());
   } else {
-    // Búsqueda en tiempo real mientras escribes
     buscarMarcaSupabase(inputMarca.value.trim());
   }
 });
 
-// Función principal de búsqueda en Supabase
 async function buscarMarcaSupabase(valor) {
   if (!valor) {
     msg.style.color = '#ffce69';
@@ -167,9 +163,9 @@ async function buscarMarcaSupabase(valor) {
     return;
   }
 
-  // Consulta a Supabase
+  // Consulta la tabla 'marcas'
   const { data, error } = await supabase
-    .from('marcas')       // Cambia 'marcas' por el nombre real de tu tabla
+    .from('marcas')
     .select('*')
     .ilike('nombre', `%${valor}%`);
 
@@ -180,7 +176,7 @@ async function buscarMarcaSupabase(valor) {
     return;
   }
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     msg.style.color = '#ff6961';
     msg.textContent = `No se encontró ninguna marca con "${valor}".`;
     resultados.innerHTML = '';
@@ -189,33 +185,56 @@ async function buscarMarcaSupabase(valor) {
 
   msg.style.color = '#a7e5b8';
   msg.textContent = `Se encontraron ${data.length} resultados:`;
+
   renderResultadosSupabase(data, valor);
 }
 
-// Renderizar resultados con tarjetas y resaltar coincidencias
 function renderResultadosSupabase(lista, busqueda) {
-  resultados.innerHTML = lista.map(auto => `
-    <div class="preview-card" onclick="scrollToMarca('${auto.id}')">
-      <img src="${auto.img}" alt="${auto.nombre}">
-      <p>${resaltarCoincidencia(auto.nombre, busqueda)}</p>
-    </div>
-  `).join('');
+  resultados.innerHTML = '';
+
+  lista.forEach(async (auto) => {
+    // Construir URL pública desde el bucket 'image'
+    const imgUrl = auto.img
+      ? supabase.storage.from('image').getPublicUrl(auto.img).data.publicUrl
+      : 'images/default.png'; // fallback si no hay imagen
+
+    // Crear la tarjeta
+    const card = document.createElement('div');
+    card.className = 'preview-card';
+    card.onclick = () => scrollToMarca(auto.id);
+
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.alt = auto.nombre;
+    img.loading = 'lazy';
+    img.style.width = '80px';
+    img.style.height = '50px';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '6px';
+    img.style.marginRight = '10px';
+
+    const p = document.createElement('p');
+    p.innerHTML = resaltarCoincidencia(auto.nombre, busqueda);
+
+    card.appendChild(img);
+    card.appendChild(p);
+    resultados.appendChild(card);
+  });
 }
 
-// Resaltar coincidencias en el texto
+// Función para resaltar coincidencias
 function resaltarCoincidencia(texto, busqueda) {
   if (!busqueda) return texto;
   const regex = new RegExp(`(${busqueda})`, 'gi');
-  return texto.replace(regex, `<span class="highlight">$1</span>`);
+  return texto.replace(regex, `<mark style="background:#ffce69;color:#000">$1</mark>`);
 }
 
-// Scroll suave hacia la marca en la galería
-window.scrollToMarca = function(id) {
-  const elemento = document.getElementById(id);
-  if (elemento) {
-    elemento.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+// Función para hacer scroll a la marca correspondiente
+function scrollToMarca(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+
 
 /* ===================================================
    🆕 SCROLL PARA TABLA COMPARATIVA
@@ -839,6 +858,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
