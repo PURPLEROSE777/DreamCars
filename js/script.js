@@ -135,73 +135,86 @@ const observer = new IntersectionObserver((entries)=>{
 document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
 
 /* ===================================================
-   🔎 BARRA DE BÚSQUEDA DE MARCAS
+   🔎 BARRA DE BÚSQUEDA PROFESIONAL CON SUPABASE
    =================================================== */
 const btnSugerir = document.getElementById('btnSugerir');
 const inputMarca = document.getElementById('marca');
-const msg        = document.getElementById('mensaje');
+const msg = document.getElementById('mensaje');
 const resultados = document.getElementById('resultados');
 
-// Capturar todas las cards ya existentes
-const autos = Array.from(document.querySelectorAll('.card')).map(card => {
-  return {
-    nombre: card.querySelector('h2').textContent.trim(),
-    img: card.querySelector('img').getAttribute('src'),
-    id: card.id
-  };
-});
-
 // Botón buscar
-btnSugerir.addEventListener('click', (e)=>{
+btnSugerir.addEventListener('click', (e) => {
   e.preventDefault();
-  buscarMarca();
+  buscarMarcaSupabase(inputMarca.value.trim());
 });
 
-// Enter = buscar
-inputMarca.addEventListener('keyup', (e)=>{
+// Buscar también al presionar Enter
+inputMarca.addEventListener('keyup', (e) => {
   if (e.key === 'Enter') {
-    buscarMarca();
+    buscarMarcaSupabase(inputMarca.value.trim());
   } else {
-    mostrarResultados(inputMarca.value.trim());
+    // Búsqueda en tiempo real mientras escribes
+    buscarMarcaSupabase(inputMarca.value.trim());
   }
 });
 
-function buscarMarca(){
-  const valor = (inputMarca.value || '').trim().toLowerCase();
-  if (!valor){
+// Función principal de búsqueda en Supabase
+async function buscarMarcaSupabase(valor) {
+  if (!valor) {
     msg.style.color = '#ffce69';
     msg.textContent = 'Por favor escribe una marca.';
     resultados.innerHTML = '';
     return;
   }
-  const filtrados = autos.filter(auto => auto.nombre.toLowerCase().includes(valor));
-  if (filtrados.length > 0){
-    msg.style.color = '#a7e5b8';
-    msg.textContent = `Se encontraron ${filtrados.length} resultados:`;
-    renderResultados(filtrados);
-  } else {
+
+  // Consulta a Supabase
+  const { data, error } = await supabase
+    .from('marcas')       // Cambia 'marcas' por el nombre real de tu tabla
+    .select('*')
+    .ilike('nombre', `%${valor}%`);
+
+  if (error) {
+    msg.style.color = '#ff6961';
+    msg.textContent = `Error al buscar: ${error.message}`;
+    resultados.innerHTML = '';
+    return;
+  }
+
+  if (data.length === 0) {
     msg.style.color = '#ff6961';
     msg.textContent = `No se encontró ninguna marca con "${valor}".`;
     resultados.innerHTML = '';
+    return;
   }
+
+  msg.style.color = '#a7e5b8';
+  msg.textContent = `Se encontraron ${data.length} resultados:`;
+  renderResultadosSupabase(data, valor);
 }
 
-function renderResultados(lista){
+// Renderizar resultados con tarjetas y resaltar coincidencias
+function renderResultadosSupabase(lista, busqueda) {
   resultados.innerHTML = lista.map(auto => `
-    <div class="preview-card" onclick="document.getElementById('${auto.id}').scrollIntoView({behavior:'smooth'})">
+    <div class="preview-card" onclick="scrollToMarca('${auto.id}')">
       <img src="${auto.img}" alt="${auto.nombre}">
-      <p>${auto.nombre}</p>
+      <p>${resaltarCoincidencia(auto.nombre, busqueda)}</p>
     </div>
   `).join('');
 }
 
-function mostrarResultados(valor){
-  if (!valor) {
-    resultados.innerHTML = '';
-    return;
+// Resaltar coincidencias en el texto
+function resaltarCoincidencia(texto, busqueda) {
+  if (!busqueda) return texto;
+  const regex = new RegExp(`(${busqueda})`, 'gi');
+  return texto.replace(regex, `<span class="highlight">$1</span>`);
+}
+
+// Scroll suave hacia la marca en la galería
+window.scrollToMarca = function(id) {
+  const elemento = document.getElementById(id);
+  if (elemento) {
+    elemento.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-  const filtrados = autos.filter(auto => auto.nombre.toLowerCase().includes(valor.toLowerCase()));
-  renderResultados(filtrados);
 }
 
 /* ===================================================
@@ -826,6 +839,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
