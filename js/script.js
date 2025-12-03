@@ -136,6 +136,10 @@ document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
 
 /* ===================================================
    🔎 BARRA DE BÚSQUEDA PROFESIONAL CON SUPABASE
+ ===================================================== */
+
+/* ===================================================
+   🔎 BARRA DE BÚSQUEDA PROFESIONAL CON SUPABASE (marcas + galeria)
    =================================================== */
 const btnSugerir = document.getElementById('btnSugerir');
 const inputMarca = document.getElementById('marca');
@@ -144,18 +148,14 @@ const resultados = document.getElementById('resultados');
 
 btnSugerir.addEventListener('click', (e) => {
   e.preventDefault();
-  buscarMarcaSupabase(inputMarca.value.trim());
+  buscarSupabase(inputMarca.value.trim());
 });
 
 inputMarca.addEventListener('keyup', (e) => {
-  if (e.key === 'Enter') {
-    buscarMarcaSupabase(inputMarca.value.trim());
-  } else {
-    buscarMarcaSupabase(inputMarca.value.trim());
-  }
+  buscarSupabase(inputMarca.value.trim());
 });
 
-async function buscarMarcaSupabase(valor) {
+async function buscarSupabase(valor) {
   if (!valor) {
     msg.style.color = '#ffce69';
     msg.textContent = 'Por favor escribe una marca.';
@@ -163,58 +163,82 @@ async function buscarMarcaSupabase(valor) {
     return;
   }
 
-  // Consulta la tabla 'marcas'
-  const { data, error } = await supabase
+  // 🔹 Buscar en tabla 'marcas'
+  const { data: marcasData, error: marcasError } = await supabase
     .from('marcas')
     .select('*')
     .ilike('nombre', `%${valor}%`);
 
-  if (error) {
+  // 🔹 Buscar en tabla 'galeria'
+  const { data: galeriaData, error: galeriaError } = await supabase
+    .from('galeria')
+    .select('*')
+    .ilike('nombre', `%${valor}%`);
+
+  if (marcasError || galeriaError) {
     msg.style.color = '#ff6961';
-    msg.textContent = `Error al buscar: ${error.message}`;
+    msg.textContent = `Error al buscar: ${marcasError?.message || galeriaError?.message}`;
     resultados.innerHTML = '';
     return;
   }
 
-  if (!data || data.length === 0) {
+  // 🔹 Unir resultados
+  const todosResultados = [
+    ...(marcasData || []),
+    ...(galeriaData || [])
+  ];
+
+  if (!todosResultados.length) {
     msg.style.color = '#ff6961';
-    msg.textContent = `No se encontró ninguna marca con "${valor}".`;
+    msg.textContent = `No se encontró ninguna coincidencia con "${valor}".`;
     resultados.innerHTML = '';
     return;
   }
 
   msg.style.color = '#a7e5b8';
-  msg.textContent = `Se encontraron ${data.length} resultados:`;
+  msg.textContent = `Se encontraron ${todosResultados.length} resultados:`;
 
-  renderResultadosSupabase(data, valor);
+  renderResultadosUnificados(todosResultados, valor);
 }
 
-function renderResultadosSupabase(lista, busqueda) {
+// Renderizar resultados de ambas tablas
+function renderResultadosUnificados(lista, busqueda) {
   resultados.innerHTML = '';
 
-  lista.forEach(async (auto) => {
-    // Construir URL pública desde el bucket 'image'
-    const imgUrl = auto.img
-      ? supabase.storage.from('image').getPublicUrl(auto.img).data.publicUrl
-      : 'images/default.png'; // fallback si no hay imagen
+  lista.forEach(item => {
+    // 🔹 Ambas tablas ya tienen URLs completas
+    const imgUrl = item.url || item.imagen || 'https://afhjlxljgwmkdnltoeie.supabase.co/storage/v1/object/public/image/default.png';
 
-    // Crear la tarjeta
     const card = document.createElement('div');
     card.className = 'preview-card';
-    card.onclick = () => scrollToMarca(auto.id);
+    card.onclick = () => scrollToMarca(item.id);
+
+    card.style.display = 'flex';
+    card.style.alignItems = 'center';
+    card.style.padding = '6px 12px';
+    card.style.borderRadius = '10px';
+    card.style.marginBottom = '6px';
+    card.style.background = '#1f1f25';
+    card.style.cursor = 'pointer';
+    card.style.transition = '0.2s all';
+    card.onmouseenter = () => card.style.background = '#2a2b36';
+    card.onmouseleave = () => card.style.background = '#1f1f25';
 
     const img = document.createElement('img');
     img.src = imgUrl;
-    img.alt = auto.nombre;
+    img.alt = item.nombre || item.titulo || 'auto';
     img.loading = 'lazy';
-    img.style.width = '80px';
-    img.style.height = '50px';
+    img.style.width = '120px';
+    img.style.height = '70px';
     img.style.objectFit = 'cover';
-    img.style.borderRadius = '6px';
-    img.style.marginRight = '10px';
+    img.style.borderRadius = '8px';
+    img.style.marginRight = '12px';
 
     const p = document.createElement('p');
-    p.innerHTML = resaltarCoincidencia(auto.nombre, busqueda);
+    p.innerHTML = resaltarCoincidencia(item.nombre || item.titulo || '', busqueda);
+    p.style.color = '#fff';
+    p.style.fontWeight = '600';
+    p.style.margin = '0';
 
     card.appendChild(img);
     card.appendChild(p);
@@ -222,14 +246,14 @@ function renderResultadosSupabase(lista, busqueda) {
   });
 }
 
-// Función para resaltar coincidencias
+// Resaltar coincidencias
 function resaltarCoincidencia(texto, busqueda) {
   if (!busqueda) return texto;
   const regex = new RegExp(`(${busqueda})`, 'gi');
   return texto.replace(regex, `<mark style="background:#ffce69;color:#000">$1</mark>`);
 }
 
-// Función para hacer scroll a la marca correspondiente
+// Scroll a la marca correspondiente
 function scrollToMarca(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -858,6 +882,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 });
+
 
 
 
