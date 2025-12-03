@@ -81,93 +81,246 @@
   </div>
 </div> 
   
-   <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
+  <!-- OVERLAY AUTORES + INFORMACIÓN DEL PROYECTO (CON SCROLL INTERNO) -->
 <div class="overlay" id="autoresOverlay" aria-hidden="true" role="dialog">
   <div class="overlay-content autores">
     <div class="overlay-head">
       <h2>Desarrollado por</h2>
       <button class="btn-cerrar" id="cerrarAutores" aria-label="Cerrar autores">✕</button>
     </div>
-    <!-- 🔹 Cuerpo del overlay con scroll interno -->
+
+    <!-- Cuerpo del overlay con scroll interno -->
     <div class="overlay-body" style="padding: 20px; overflow-y: auto; max-height: 75vh;">
-      <!-- 🧑‍💻 Lista de desarrolladores -->
+
+      <!-- Lista de desarrolladores -->
       <ul class="lista-autores">
         <li>Alvarez Murcia Nicolas</li>
         <li>Davila Maldonado Julian</li>
         <li>Perez Pinilla Alan</li>
       </ul>
 
-      <!-- 🚗 Sección informativa del proyecto -->
+      <!-- Introducción -->
       <section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 10px;">
-        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Acerca del Proyecto — DreamCars</h3>
-        <p><strong>Misión:</strong> Ofrecer una experiencia interactiva que permita explorar, comparar y gestionar información sobre los autos más icónicos del mundo, combinando historia, diseño e innovación en un solo lugar digital.</p>
-        <p><strong>Visión:</strong> Convertirse en una plataforma educativa y visual reconocida por su presentación clara, estética moderna y utilidad para los apasionados del automovilismo y la tecnología.</p>
-        <p><strong>Introducción:</strong> DreamCars es un proyecto web diseñado para mostrar la evolución, características y legado de las marcas de autos más legendarias. Además, incluye herramientas de gestión y análisis de inventario, integrando la historia automotriz con una experiencia digital interactiva.</p>
+        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Introducción — DreamCars</h3>
+        <p>DreamCars es una plataforma web interactiva que permite explorar y gestionar información detallada sobre marcas y modelos de autos icónicos. Combina diseño visual moderno, historial automotriz y administración de datos en tiempo real.</p>
 
-  <!-- DOCUMENTACIÓN TÉCNICA -->
+        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Misión</h3>
+        <p>Ofrecer una experiencia educativa e interactiva para los amantes del automovilismo, con información histórica y técnica sobre cada marca y modelo.</p>
 
+        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Visión</h3>
+        <p>Ser la plataforma digital de referencia para aficionados al automovilismo, con información confiable, accesible y estéticamente atractiva.</p>
 
-<section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 20px;">
-  <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Documentación Técnica — DreamCars</h3>
-  <p><strong>Introducción:</strong> Este documento explica paso a paso cómo se implementó la conexión con la base de datos, la carga de marcas e imágenes de la aplicación DreamCars.</p>
-
-  <!-- 1. Tabla de marcas -->
-  <h4>1. Tabla de marcas</h4>
-  <p>
-    Creamos un archivo JS para cargar las marcas y una tabla en la base de datos. Antes estos
-    datos estaban locales, ahora se gestionan con Supabase.  
-    Imagen explicativa: <img src="images/tabla_marcas.jpg" alt="Tabla de marcas" class="img-doc" />
-  </p>
-  <p><strong>Qué es un Bucket en Supabase?:</strong>  
-     <img src="images/bucket_explicacion.jpg" alt="Bucket explicación" class="img-doc" />
-  </p>
-  <ul>
-    <li><strong>A.</strong> Creamos un Bucket: <img src="images/bucket_crear.jpg" alt="Crear Bucket" class="img-doc" /></li>
-    <li><strong>B.</strong> Configuramos reglas (lectura pública, tamaño, formatos): <img src="images/bucket_reglas.jpg" alt="Reglas Bucket" class="img-doc" /></li>
-    <li><strong>C.</strong> Subimos archivos locales: <img src="images/bucket_subida.jpg" alt="Subida archivos" class="img-doc" /></li>
-    <li><strong>D.</strong> Obtenemos URLs para la base de datos: <img src="images/bucket_urls.jpg" alt="URLs Bucket" class="img-doc" /></li>
-  </ul>
-  <p><strong>Ingreso de datos en PostgreSQL:</strong>  
-     <img src="images/postgres_tabla.jpg" alt="Base de datos" class="img-doc" />
-  </p>
-  <ul>
-    <li><strong>A.</strong> Crear tabla: <img src="images/tabla_crear.jpg" alt="Crear tabla marcas" class="img-doc" /></li>
-    <li><strong>B.</strong> Insertar datos: <img src="images/tabla_insertar.jpg" alt="Insertar datos marcas" class="img-doc" /></li>
-    <li><strong>C.</strong> Configurar índices y verificaciones: <img src="images/tabla_config.jpg" alt="Config tablas" class="img-doc" /></li>
-    <li><strong>D.</strong> Verificar funcionamiento: <img src="images/tabla_verificar.jpg" alt="Verificación tabla" class="img-doc" /></li>
-  </ul>
-  
-  <!-- 2. Usuarios -->
-  <h4>2. Tablas de inicio de sesión y registro</h4>
-  <ul>
-    <li><strong>A.</strong> Tabla Profiles con datos parciales de usuarios: <img src="images/profiles_tabla.jpg" alt="Tabla Profiles" class="img-doc" /></li>
-    <li><strong>B.</strong> Registro de perfil Administrador: <img src="images/admin_registro.jpg" alt="Registro Admin" class="img-doc" /></li>
-    <li><strong>C.</strong> Verificación de autenticidad: <img src="images/verificacion.jpg" alt="Verificación" class="img-doc" /></li>
-    <li><strong>D.</strong> Organización de roles en Auth: <img src="images/auth_roles.jpg" alt="Auth roles" class="img-doc" /></li>
-  </ul>
-
-  <!-- 3. Galería -->
-  <h4>3. Tabla de imágenes para la galería</h4>
-  <ul>
-    <li><strong>A.</strong> Crear tabla e insertar URLs del Bucket: <img src="images/galeria_tabla.jpg" alt="Tabla Galería" class="img-doc" /></li>
-    <li><strong>B.</strong> Verificar tabla: <img src="images/galeria_verificar.jpg" alt="Verificación Galería" class="img-doc" /></li>
-    <li><strong>C.</strong> Visualizar imágenes exportadas: <img src="images/galeria_vista.jpg" alt="Galería completa" class="img-doc" /></li>
-  </ul>
-</section>
-
-<!-- Continuacion de parte teorica -->
-        <p><strong>Objetivo general:</strong> Desarrollar una aplicación web funcional e intuitiva que permita consultar, administrar y visualizar información detallada sobre autos y marcas de manera dinámica.</p>
-        <p><strong>Objetivos específicos:</strong></p>
+        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Objetivos</h3>
         <ul style="margin-left: 20px;">
-          <li>Implementar una interfaz moderna, adaptable y fácil de usar.</li>
-          <li>Integrar funciones de inventario con filtrado, búsqueda y exportación de datos.</li>
-          <li>Mostrar la historia y los íconos más representativos de cada marca.</li>
-          <li>Fomentar el interés por el automovilismo mediante la tecnología y el diseño web.</li>
+          <li>Implementar una interfaz moderna y responsiva.</li>
+          <li>Gestionar inventario con filtros, búsquedas y exportaciones.</li>
+          <li>Centralizar imágenes de autos en un bucket seguro en la nube.</li>
+          <li>Aplicar buenas prácticas de administración de base de datos: triggers, logs, auditoría, roles y backups.</li>
         </ul>
       </section>
+
+      <!-- Documentación Técnica -->
+      <section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 20px;">
+        <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Documentación Técnica — DreamCars</h3>
+        <p>En esta sección se detalla la estructura de la base de datos, triggers, logs, roles, buckets y administración aplicada al proyecto DreamCars.</p>
+
+        <!-- 1️⃣ Tabla de marcas -->
+        <h4>1. Tabla de marcas</h4>
+        <p>La tabla <code>marcas</code> almacena información de cada marca, incluyendo descripción, icono, año del icono y URL de imagen.</p>
+
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE TABLE public.marcas (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  nombre text NOT NULL UNIQUE,
+  descripcion text NOT NULL,
+  icono text NOT NULL,
+  anio_icono integer,
+  imagen_url text NOT NULL,
+  slug text NOT NULL UNIQUE,
+  creado_en timestamp DEFAULT now(),
+  actualizado_en timestamp DEFAULT now(),
+  CONSTRAINT marcas_pkey PRIMARY KEY (id)
+);</pre>
+
+        <!-- images/tabla_marcas.jpg -->
+        <p><strong>Visualización de la tabla:</strong></p>
+        <img src="images/tabla_marcas.jpg" alt="Tabla de marcas" class="img-doc" style="width:100%; max-width:400px; display:block; margin-bottom:10px;" />
+
+        <h5>Miniaturas de marcas:</h5>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <img src="images/marca1.jpg" alt="Marca 1" style="width:80px; height:80px; object-fit:cover; border-radius:8px;"/>
+          <img src="images/marca2.jpg" alt="Marca 2" style="width:80px; height:80px; object-fit:cover; border-radius:8px;"/>
+          <img src="images/marca3.jpg" alt="Marca 3" style="width:80px; height:80px; object-fit:cover; border-radius:8px;"/>
+        </div>
+
+        <h5>Trigger — Actualización automática de timestamps:</h5>
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE OR REPLACE FUNCTION update_marcas_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.actualizado_en = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_marcas
+BEFORE UPDATE ON public.marcas
+FOR EACH ROW
+EXECUTE FUNCTION update_marcas_timestamp();</pre>
+
+        <h5>Logs de cambios en marcas:</h5>
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE TABLE public.marcas_log (
+  id serial PRIMARY KEY,
+  marca_id uuid,
+  accion text,
+  cambios jsonb,
+  realizado_por uuid,
+  fecha timestamp DEFAULT now()
+);</pre>
+
+        <!-- 2️⃣ Tabla profiles y Auth -->
+        <h4>2. Tabla Profiles y gestión de usuarios</h4>
+        <p>La tabla <code>profiles</code> está conectada a <code>auth.users</code> de Supabase y permite gestionar roles y auditoría.</p>
+
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE TABLE public.profiles (
+  id uuid NOT NULL,
+  full_name text NOT NULL,
+  created_at timestamp with time zone DEFAULT timezone('utc', now()),
+  role text DEFAULT 'user',
+  CONSTRAINT profiles_pkey PRIMARY KEY (id),
+  CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
+);</pre>
+
+        <!-- images/profiles_tabla.jpg -->
+        <p><strong>Tabla Profiles:</strong></p>
+        <img src="images/profiles_tabla.jpg" alt="Tabla Profiles" class="img-doc" style="width:100%; max-width:400px; display:block; margin-bottom:10px;" />
+
+        <h5>Visualización de roles y permisos:</h5>
+        <div style="display:flex; gap:20px; margin-bottom:10px;">
+          <div style="text-align:center;">
+            <div style="background:#4CAF50; color:white; padding:10px; border-radius:6px;">Admin</div>
+            <small>Control total sobre marcas, perfiles y galería</small>
+          </div>
+          <div style="text-align:center;">
+            <div style="background:#2196F3; color:white; padding:10px; border-radius:6px;">Supervisor</div>
+            <small>Revisión y auditoría de datos</small>
+          </div>
+          <div style="text-align:center;">
+            <div style="background:#FFC107; color:white; padding:10px; border-radius:6px;">Usuario</div>
+            <small>Acceso solo a visualización de galería y marcas</small>
+          </div>
+        </div>
+
+        <h5>Trigger — Auditoría de roles:</h5>
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE TABLE public.roles_log (
+  id serial PRIMARY KEY,
+  user_id uuid NOT NULL,
+  old_role text,
+  new_role text,
+  cambiado_por uuid,
+  fecha timestamp DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION audita_roles()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF OLD.role IS DISTINCT FROM NEW.role THEN
+    INSERT INTO roles_log(user_id, old_role, new_role, cambiado_por, fecha)
+    VALUES (OLD.id, OLD.role, NEW.role, NEW.id, now());
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audita_roles
+AFTER UPDATE ON public.profiles
+FOR EACH ROW
+EXECUTE FUNCTION audita_roles();</pre>
+
+        <!-- 3️⃣ Galería -->
+        <h4>3. Tabla Galería</h4>
+        <p>La tabla <code>galeria</code> almacena imágenes de autos para el layout. Contiene nombre, URL, categoría y orden.</p>
+
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE TABLE public.galeria (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  nombre text NOT NULL,
+  url text NOT NULL,
+  orden integer DEFAULT 0,
+  categoria text DEFAULT 'general',
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT galeria_pkey PRIMARY KEY (id)
+);</pre>
+
+        <!-- images/galeria_vista.jpg -->
+        <p><strong>Galería completa:</strong></p>
+        <img src="images/galeria_vista.jpg" alt="Galería completa" class="img-doc" style="width:100%; max-width:400px; display:block; margin-bottom:10px;" />
+
+        <h5>Miniaturas de galería:</h5>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+          <img src="images/galeria1.jpg" alt="Auto 1" style="width:80px; height:80px; object-fit:cover; border-radius:8px;"/>
+          <img src="images/galeria2.jpg" alt="Auto 2" style="width:80px; height:80px; object-fit:cover; border-radius:8px;"/>
+          <img src="images/galeria3.jpg" alt="Auto 3" style="width:80px; height:80px; object-fit:cover; border-radius:8px;"/>
+        </div>
+
+        <h5>Trigger — Auditoría de galería:</h5>
+        <pre style="background:#2a2b36; color:#fff; padding:10px;">CREATE TABLE public.galeria_log (
+  id serial PRIMARY KEY,
+  galeria_id uuid,
+  accion text,
+  detalles jsonb,
+  usuario_id uuid,
+  fecha timestamp DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION audita_galeria()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO galeria_log(galeria_id, accion, detalles, usuario_id, fecha)
+  VALUES (NEW.id, TG_OP, row_to_json(NEW), NEW.id, now());
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audita_galeria
+AFTER INSERT OR UPDATE OR DELETE ON public.galeria
+FOR EACH ROW
+EXECUTE FUNCTION audita_galeria();</pre>
+
+        <!-- Administración avanzada -->
+        <h4>4. Administración de Base de Datos y Buenas Prácticas</h4>
+        <ul>
+          <li>Backups automáticos diarios de todas las tablas.</li>
+          <li>Logs de transacciones completos (inserciones, actualizaciones, eliminaciones).</li>
+          <li>Roles diferenciados: admin, supervisor y usuario estándar.</li>
+          <li>Índices y constraints para optimizar consultas y mantener integridad.</li>
+          <li>Plan de recuperación ante fallos y auditoría de cada tabla.</li>
+        </ul>
+
+        <!-- Bucket de imágenes -->
+        <h4>5. Gestión de imágenes con Bucket</h4>
+        <p>Se utiliza un bucket de Supabase Storage para almacenar imágenes locales de autos. Permite:</p>
+        <ul>
+          <li>Almacenamiento seguro en la nube con URLs públicas.</li>
+          <li>Organización por carpetas y categorías.</li>
+          <li>Inserción directa en la tabla <code>galeria</code> mediante URLs.</li>
+        </ul>
+
+        <!-- Resumen -->
+        <section class="proyecto-info" style="padding: 20px; border-top: 1px solid #2a2b36; margin-top: 20px;">
+          <h3 style="color: var(--accent); text-align: center; margin-bottom: 14px;">Resumen de Buenas Prácticas</h3>
+          <ul>
+            <li>Triggers para actualizar timestamps y auditar cambios.</li>
+            <li>Logs separados para marcas, roles y galería.</li>
+            <li>Backups periódicos y plan de recuperación ante fallos.</li>
+            <li>Roles y permisos diferenciados según funciones.</li>
+            <li>Integridad referencial con foreign keys y constraints.</li>
+            <li>Bucket centralizado para gestión de imágenes locales.</li>
+            <li>Miniaturas de marcas y galería para visualización rápida en la UI.</li>
+          </ul>
+        </section>
+
     </div><!-- /.overlay-body -->
   </div><!-- /.overlay-content -->
 </div><!-- /.overlay -->
+
 
   <!-- OVERLAY TABLA COMPARATIVA (sin cambios) -->
   <div class="overlay" id="tablaOverlay" aria-hidden="true" role="dialog">
@@ -458,6 +611,7 @@
     <script type="module" src="js/galeriaSupabase.js"></script>
 </body>
 </html>
+
 
 
 
