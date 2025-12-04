@@ -99,3 +99,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Cargar marcas desde el overlay inventario 
+window.cargarMarcas = async function () {
+  const cont = document.getElementById("marcasContainer");
+  cont.innerHTML = "<p style='color:white'>Cargando marcas...</p>";
+
+  const { data: marcas, error } = await supabase.from("marcas").select("*");
+
+  if (error) {
+    cont.innerHTML = "<p>Error cargando marcas.</p>";
+    return;
+  }
+
+  cont.innerHTML = marcas.map(m => `
+    <div class="card">
+      <img src="${m.imagen_url}" alt="${m.nombre}">
+      <h3>${m.nombre}</h3>
+      <p>${m.descripcion}</p>
+    </div>
+  `).join("");
+};
+
+
