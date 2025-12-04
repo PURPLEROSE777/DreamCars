@@ -99,25 +99,42 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Cargar marcas desde el overlay inventario 
+// ==========================================================
+// Cargar marcas desde el overlay inventario  (CORREGIDO)
+// ==========================================================
+
 window.cargarMarcas = async function () {
   const cont = document.getElementById("marcasContainer");
-  cont.innerHTML = "<p style='color:white'>Cargando marcas...</p>";
 
-  const { data: marcas, error } = await supabase.from("marcas").select("*");
-
-  if (error) {
-    cont.innerHTML = "<p>Error cargando marcas.</p>";
+  if (!cont) {
+    console.error("❌ No existe el contenedor #marcasContainer.");
     return;
   }
 
-  cont.innerHTML = marcas.map(m => `
-    <div class="card">
-      <img src="${m.imagen_url}" alt="${m.nombre}">
-      <h3>${m.nombre}</h3>
-      <p>${m.descripcion}</p>
-    </div>
-  `).join("");
+  cont.innerHTML = "<p style='color:white'>Cargando marcas...</p>";
+
+  const { data: marcas, error } = await supabase
+    .from("marcas")
+    .select("*")
+    .order("nombre", { ascending: true });
+
+  if (error) {
+    cont.innerHTML = "<p style='color:white'>Error cargando marcas.</p>";
+    console.error("❌ Error obteniendo marcas:", error);
+    return;
+  }
+
+  cont.innerHTML = marcas
+    .map(
+      (m) => `
+      <div class="card">
+        <img src="${m.imagen_url}" alt="${m.nombre}">
+        <h3>${m.nombre}</h3>
+        <p>${m.descripcion}</p>
+      </div>
+    `
+    )
+    .join("");
 };
 
 
