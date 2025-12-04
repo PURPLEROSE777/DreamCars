@@ -884,63 +884,74 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* ============================================
-   AGREGAR MARCA A SUPABASE DESDE INVENTARIO BORRAR SI FALLA
+   AGREGAR MARCA A SUPABASE DESDE INVENTARIO  
+   (Versión corregida y segura)
    ============================================ */
-
-import { supabase } from "./supabaseClient.js"; // tu cliente ya existente
 
 document.getElementById("formInventario").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Datos principales del formulario
   const nombre = document.getElementById("iMarca").value.trim();
   const modelo = document.getElementById("iModelo").value.trim();
   const anio = parseInt(document.getElementById("iAnio").value, 10);
   const imagen = document.getElementById("iImagen").value.trim();
 
-  // Si la marca no existe, queremos crearla
-  // slug = ford → "ford"
+  // Generar slug: "Ford Explorer" → "ford-explorer"
   const slug = nombre.toLowerCase().replace(/\s+/g, "-");
 
-  // Descripción automática (puedes editar)
+  // Descripción automática
   const descripcion = `Modelos destacados como el ${modelo}.`;
 
-  // Icono automático basado en la imagen
+  // Icono automático basado en la imagen o icono por defecto
   const icono = imagen || "/images/default-icon.jpg";
 
-  // Insertar solo si NO existe previamente
-  const { data: existe } = await supabase
-    .from("marcas")
-    .select("id")
-    .eq("nombre", nombre)
-    .maybeSingle();
+  try {
+    // Verificar si la marca ya existe
+    const { data: existe, error: errorExiste } = await supabase
+      .from("marcas")
+      .select("id")
+      .eq("nombre", nombre)
+      .maybeSingle();
 
-  if (!existe) {
-    const { error } = await supabase.from("marcas").insert([
-      {
-        nombre,
-        descripcion,
-        icono,
-        anio_icono: anio,
-        imagen_url: imagen,
-        slug
-      }
-    ]);
-
-    if (error) {
-      console.error("Error guardando marca:", error);
-      alert("No se pudo insertar la marca.");
+    if (errorExiste) {
+      console.error("❌ Error verificando marca:", errorExiste);
+      alert("Error verificando si la marca existe.");
       return;
     }
-  }
 
-  alert("Auto y marca guardados con éxito ✔");
+    // Insertar solo si NO existe
+    if (!existe) {
+      const { error: errorInsert } = await supabase.from("marcas").insert([
+        {
+          nombre,
+          descripcion,
+          icono,
+          anio_icono: anio,
+          imagen_url: imagen,
+          slug
+        }
+      ]);
 
-  // Recargar marcas en el panel principal
-  if (window.cargarMarcas) {
-    window.cargarMarcas();
+      if (errorInsert) {
+        console.error("❌ Error guardando marca:", errorInsert);
+        alert("No se pudo insertar la marca en Supabase.");
+        return;
+      }
+    }
+
+    alert("Auto y marca guardados con éxito ✔");
+
+    // Recargar marcas si la función principal existe
+    if (window.cargarMarcas) {
+      window.cargarMarcas();
+    }
+
+  } catch (err) {
+    console.error("❌ Error inesperado:", err);
+    alert("Ocurrió un error inesperado.");
   }
 });
-
 
 
 
