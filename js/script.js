@@ -883,6 +883,65 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
+/* ============================================
+   AGREGAR MARCA A SUPABASE DESDE INVENTARIO BORRAR SI FALLA
+   ============================================ */
+
+import { supabase } from "./supabaseClient.js"; // tu cliente ya existente
+
+document.getElementById("formInventario").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("iMarca").value.trim();
+  const modelo = document.getElementById("iModelo").value.trim();
+  const anio = parseInt(document.getElementById("iAnio").value, 10);
+  const imagen = document.getElementById("iImagen").value.trim();
+
+  // Si la marca no existe, queremos crearla
+  // slug = ford → "ford"
+  const slug = nombre.toLowerCase().replace(/\s+/g, "-");
+
+  // Descripción automática (puedes editar)
+  const descripcion = `Modelos destacados como el ${modelo}.`;
+
+  // Icono automático basado en la imagen
+  const icono = imagen || "/images/default-icon.jpg";
+
+  // Insertar solo si NO existe previamente
+  const { data: existe } = await supabase
+    .from("marcas")
+    .select("id")
+    .eq("nombre", nombre)
+    .maybeSingle();
+
+  if (!existe) {
+    const { error } = await supabase.from("marcas").insert([
+      {
+        nombre,
+        descripcion,
+        icono,
+        anio_icono: anio,
+        imagen_url: imagen,
+        slug
+      }
+    ]);
+
+    if (error) {
+      console.error("Error guardando marca:", error);
+      alert("No se pudo insertar la marca.");
+      return;
+    }
+  }
+
+  alert("Auto y marca guardados con éxito ✔");
+
+  // Recargar marcas en el panel principal
+  if (window.cargarMarcas) {
+    window.cargarMarcas();
+  }
+});
+
+
 
 
 
