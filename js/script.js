@@ -885,7 +885,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 /* ============================================
    AGREGAR MARCA A SUPABASE DESDE INVENTARIO  
-   (Versión corregida y segura)
+   (Versión corregida y limpia)
    ============================================ */
 
 document.getElementById("formInventario").addEventListener("submit", async (e) => {
@@ -897,14 +897,16 @@ document.getElementById("formInventario").addEventListener("submit", async (e) =
   const anio = parseInt(document.getElementById("iAnio").value, 10);
   const imagen = document.getElementById("iImagen").value.trim();
 
-  // Generar slug: "Ford Explorer" → "ford-explorer"
+  // Slug automático
   const slug = nombre.toLowerCase().replace(/\s+/g, "-");
 
   // Descripción automática
   const descripcion = `Modelos destacados como el ${modelo}.`;
 
-  // Icono automático basado en la imagen o icono por defecto
-  const icono = imagen || "/images/default-icon.jpg";
+  // ⚠ NO USAMOS ICONOS LOCALES NI DEFAULTS
+  // Solo guardamos la imagen real que viene del URL
+  const icono = imagen; 
+  const anio_icono = anio; // ya que lo usas en BD, lo dejamos limpio.
 
   try {
     // Verificar si la marca ya existe
@@ -926,9 +928,9 @@ document.getElementById("formInventario").addEventListener("submit", async (e) =
         {
           nombre,
           descripcion,
-          icono,
-          anio_icono: anio,
-          imagen_url: imagen,
+          icono,           // ← ya no mete carpetas locales
+          anio_icono,      // ← evita null
+          imagen_url: imagen, // ← tu URL real
           slug
         }
       ]);
@@ -942,9 +944,8 @@ document.getElementById("formInventario").addEventListener("submit", async (e) =
 
     alert("Auto y marca guardados con éxito ✔");
 
-    // Recargar marcas si la función principal existe
     if (window.cargarMarcas) {
-      window.cargarMarcas();
+      window.cargarMarcas(); // recarga visual
     }
 
   } catch (err) {
@@ -952,9 +953,6 @@ document.getElementById("formInventario").addEventListener("submit", async (e) =
     alert("Ocurrió un error inesperado.");
   }
 });
-
-
-
 
 
 
