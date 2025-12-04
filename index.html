@@ -387,147 +387,104 @@ EXECUTE FUNCTION audita_galeria();</pre>
     </div>
   </div>
 
-<!-- OVERLAY INVENTARIO (CORREGIDO) -->
+<!-- OVERLAY INVENTARIO (AJUSTADO A TABLA `marcas`) -->
 <div class="overlay" id="inventarioOverlay" aria-hidden="true" role="dialog">
   <div class="overlay-content tabla">
     <div class="overlay-head">
-      <h2>Inventario de Carros</h2>
+      <h2>Inventario / Crear Marca</h2>
       <button class="btn-cerrar" id="cerrarInventario" aria-label="Cerrar inventario">✕</button>
     </div>
 
-    <div class="overlay-body" style="padding:18px">
+    <div class="overlay-body" style="padding:18px;">
 
-      <!-- Contenedor para vista en tarjetas -->
-      <div id="cardsInventario" class="grid-cards" style="display:none"></div>
-
-      <!-- Barra de herramientas del inventario -->
-      <section class="formulario" id="toolbarInventario" style="margin-top:0">
-        <h3>Gestión</h3>
-        <div class="form-row" style="flex-wrap:wrap">
-          <input type="text" id="invBuscar" placeholder="Buscar por marca/modelo…">
-          <select id="invFiltroCategoria" aria-label="Filtrar por categoría">
-            <option value="">Todas las categorías</option>
-            <option value="Deportivo">Deportivo</option>
-            <option value="Lujo">Lujo</option>
-            <option value="Clásico">Clásico</option>
-            <option value="SUV">SUV</option>
-            <option value="Híbrido/EV">Híbrido/EV</option>
-          </select>
-
-          <input type="number" id="invPrecioMin" placeholder="Precio min ($)" min="0" style="max-width:140px">
-          <input type="number" id="invPrecioMax" placeholder="Precio max ($)" min="0" style="max-width:140px">
-          <input type="number" id="invAnioMin" placeholder="Año min" min="1900" max="2099" style="max-width:120px">
-          <input type="number" id="invAnioMax" placeholder="Año max" min="1900" max="2099" style="max-width:120px">
-
-          <label style="display:inline-flex;align-items:center;gap:8px">
-            <input type="checkbox" id="invDisponibilidad"> Mostrar solo disponibles
-          </label>
-
-          <button id="invExportar" class="btn-primario" type="button">Exportar JSON</button>
-          <label for="invImportar" class="btn-primario" style="display:inline-flex;align-           items:center;gap:6px;cursor:pointer">
-            Importar JSON <input id="invImportar" type="file" accept="application/json" style="display:none">
-          </label>
-          <button id="invVaciar" class="btn-primario" type="button" aria-live="polite">Vaciar Inventario</button>
-        </div>
-      </section>
-
-      <!-- Formulario de alta/edición -->
+      <!-- Formulario: contiene los campos necesarios para la tabla `marcas` -->
       <form id="formInventario" class="formulario" autocomplete="off">
-        <h3>Agregar / Editar Auto</h3>
-        <div class="form-row" style="flex-wrap:wrap">
-          <input type="text" id="iMarca" placeholder="Marca *" required>
-          <input type="text" id="iModelo" placeholder="Modelo *" required>
-          <input type="number" id="iAnio" placeholder="Año *" min="1900" max="2099" required>
-          <select id="iCategoria" required>
-            <option value="" disabled selected>Categoría *</option>
-            <option>Deportivo</option>
-            <option>Lujo</option>
-            <option>Clásico</option>
-            <option>SUV</option>
-            <option>Híbrido/EV</option>
-          </select>
-          <input type="number" id="iStock" placeholder="Cantidad *" min="0" required>
-          <input type="number" id="iPrecio" placeholder="Precio ($) *" min="0" step="0.01" required>
-          <input type="number" id="iCosto" placeholder="Costo ($)" min="0" step="0.01">
-          <input type="text" id="iSKU" placeholder="SKU / ID">
-          <input type="url" id="iImagen" placeholder="URL imagen (opcional)">
-          <button type="submit" class="btn-primario" id="btnGuardarAuto">➕ Guardar</button>
-          <button type="button" class="btn-primario" id="btnCancelarEdicion" style="display:none">Cancelar</button>
+        <h3 style="margin-bottom:10px">Agregar / Editar Marca</h3>
+
+        <div class="form-row" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; align-items:start;">
+
+          <!-- nombre (iMarca ya existente) -->
+          <div>
+            <label for="iMarca" style="display:block;font-weight:600;margin-bottom:6px">Nombre *</label>
+            <input type="text" id="iMarca" placeholder="Ej. Ford" required />
+          </div>
+
+          <!-- slug (opcional, se puede autogenerar en JS si se deja vacío) -->
+          <div>
+            <label for="iSlug" style="display:block;font-weight:600;margin-bottom:6px">Slug (opcional)</label>
+            <input type="text" id="iSlug" placeholder="ford, ford-mustang (autogenerado si vacío)" />
+            <small style="color:#b7b7bd; display:block; margin-top:6px">Si lo dejas vacío se generará automáticamente.</small>
+          </div>
+
+          <!-- descripcion -->
+          <div style="grid-column: 1 / -1;">
+            <label for="iDescripcion" style="display:block;font-weight:600;margin-bottom:6px">Descripción *</label>
+            <textarea id="iDescripcion" rows="2" placeholder="Breve descripción de la marca o del modelo" required></textarea>
+          </div>
+
+          <!-- año del icono / año representativo -->
+          <div>
+            <label for="iAnioIcono" style="display:block;font-weight:600;margin-bottom:6px">Año (ícono)</label>
+            <input type="number" id="iAnioIcono" placeholder="Ej. 1965" min="1800" max="2099" />
+          </div>
+
+          <!-- icono (url) -->
+          <div>
+            <label for="iIcono" style="display:block;font-weight:600;margin-bottom:6px">URL ícono *</label>
+            <input type="url" id="iIcono" placeholder="https://.../icon.png" required />
+            <small style="color:#b7b7bd; display:block; margin-top:6px">Tamaño recomendado 32×32</small>
+          </div>
+
+          <!-- imagen_url (url principal) -->
+          <div>
+            <label for="iImagen" style="display:block;font-weight:600;margin-bottom:6px">URL imagen *</label>
+            <input type="url" id="iImagen" placeholder="https://.../imagen.jpg" required />
+            <small style="color:#b7b7bd; display:block; margin-top:6px">Se usará en la tarjeta principal</small>
+          </div>
+
+          <!-- Opcionales para inventario: modelo / stock / precio -->
+          <div>
+            <label for="iModelo" style="display:block;font-weight:600;margin-bottom:6px">Modelo (opcional)</label>
+            <input type="text" id="iModelo" placeholder="Ej. Mustang GT" />
+          </div>
+
+          <div>
+            <label for="iStock" style="display:block;font-weight:600;margin-bottom:6px">Stock (opcional)</label>
+            <input type="number" id="iStock" placeholder="0" min="0" />
+          </div>
+
+          <div>
+            <label for="iPrecio" style="display:block;font-weight:600;margin-bottom:6px">Precio (opcional)</label>
+            <input type="number" id="iPrecio" placeholder="0.00" min="0" step="0.01" />
+          </div>
+
         </div>
-        <input type="hidden" id="iEditIndex" value="">
+
+        <!-- Acciones -->
+        <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
+          <button type="button" id="btnCancelarEdicion" class="btn-secundario">Cancelar</button>
+          <button type="submit" class="btn-primario" id="btnGuardarAuto">Guardar marca</button>
+        </div>
+
       </form>
 
-      <!-- Panel de estadísticas -->
-      <section id="invStats" class="formulario" style="margin-top:12px">
-        <h3>Estadísticas del Inventario</h3>
-        <div class="form-row" style="flex-wrap:wrap; justify-content:space-around; text-align:center">
-          <div class="stat-card"><p>Total Autos</p><h4 id="statTotalAutos">0</h4></div>
-          <div class="stat-card"><p>Stock Total</p><h4 id="statStock">0</h4></div>
-          <div class="stat-card"><p>Valor Promedio</p><h4 id="statPromedio">$0</h4></div>
-          <div class="stat-card"><p>Valor Total</p><h4 id="statValorTotal">$0</h4></div>
-          <div class="stat-card"><p>Marca más frecuente</p><h4 id="statMarcaFrecuente">-</h4></div>
-          <div class="stat-card"><p>Auto más caro</p><h4 id="statAutoCaro">-</h4></div>
-          <div class="stat-card"><p>Mayor margen</p><h4 id="statMayorMargen">-</h4></div>
-        </div>
-      </section>
-
-      <!-- Tabla dinámica -->
-      <div style="overflow:auto;border:1px solid #2a2b36;border-radius:14px">
-        <table class="tabla-autos" id="tablaInventario" aria-describedby="tablaInventarioDesc">
-          <caption id="tablaInventarioDesc" style="caption-side:bottom;padding:8px 12px;color:#b7b7bd">
-            Click en los encabezados para ordenar. Doble click reinicia el orden.
-          </caption>
+      <!-- Tabla compacta para ver inventario local (no obligatoria, se usa solo como ayuda visual) -->
+      <div style="margin-top:18px; overflow:auto; border:1px solid #2a2b36; border-radius:12px; padding:10px;">
+        <table class="tabla-autos" id="tablaInventario">
           <thead>
             <tr>
-              <th data-sort="marca" role="button" tabindex="0">Marca</th>
-              <th data-sort="modelo" role="button" tabindex="0">Modelo</th>
-              <th data-sort="anio" role="button" tabindex="0">Año</th>
-              <th data-sort="categoria" role="button" tabindex="0">Categoría</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Año</th>
+              <th>Stock</th>
+              <th>Precio</th>
               <th>Imagen</th>
-              <th data-sort="stock" role="button" tabindex="0">Stock</th>
-              <th data-sort="precio" role="button" tabindex="0">Precio</th>
-              <th data-sort="costo" role="button" tabindex="0">Costo</th>
-              <th data-sort="margen" role="button" tabindex="0">Margen %</th>
-              <th data-sort="valor" role="button" tabindex="0">Valor Total</th>
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody><!-- filas inyectadas por JS --></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="10" style="text-align:right;font-weight:700">Valor total inventario:</td>
-              <td id="invTotal" style="font-weight:800">$0</td>
-            </tr>
-          </tfoot>
+          <tbody><!-- filas gestionadas por JS --></tbody>
         </table>
       </div>
-
-      <!-- Dialogo y template -->
-      <dialog id="dlgConfirmar">
-        <form method="dialog" style="padding:12px 0">
-          <p id="dlgMsg" style="margin:0 0 10px">¿Confirmas la eliminación?</p>
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <button value="cancel">Cancelar</button>
-            <button value="ok" class="btn-primario">Eliminar</button>
-          </div>
-        </form>
-      </dialog>
-
-      <template id="tplFilaInventario">
-        <tr>
-          <td class="c-marca"></td>
-          <td class="c-modelo"></td>
-          <td class="c-anio"></td>
-          <td class="c-categoria"></td>
-          <td class="c-img"></td>
-          <td class="c-stock"></td>
-          <td class="c-precio"></td>
-          <td class="c-costo"></td>
-          <td class="c-margen"></td>
-          <td class="c-valor"></td>
-          <td class="c-acciones"></td>
-        </tr>
-      </template>
 
     </div><!-- /.overlay-body -->
   </div><!-- /.overlay-content -->
@@ -616,6 +573,7 @@ EXECUTE FUNCTION audita_galeria();</pre>
     <script type="module" src="js/galeriaSupabase.js"></script>
 </body>
 </html>
+
 
 
 
